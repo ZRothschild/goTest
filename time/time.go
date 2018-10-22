@@ -101,7 +101,7 @@ func main()  {
 	h,mi,s := time.Now().Clock()
 	fmt.Printf("%d 时 %d 分 %d 秒\n",h,mi,s) //16 时 21 分 56 秒
 
-	//一年第多少天
+	//一年中第几天
 	fmt.Printf("一年的第%d天\n",time.Now().YearDay()) //一年的第290天
 
 	//时区和相差的秒数
@@ -113,18 +113,34 @@ func main()  {
 	fmt.Printf("%d 年第 %d 个星期\n",y,w) //2018 年第 43 个星期
 
 	//func (t Time) IsZero() bool {} // 是否是零时时间
-	//func (t Time) After(u Time) bool {} // 时间在u 之前
-	//func (t Time) Before(u Time) bool {} // 时间在u 之后
-	//func (t Time) Equal(u Time) bool {} // 时间与u 相同
+	//func (t Time) After(e Time) bool {} // 时间在e 之前
+	//func (t Time) Before(e Time) bool {} // 时间在e 之后
+	//func (t Time) Equal(e Time) bool {} // 时间与e 相同
 	//func (t Time) Add(d Duration) Time {} // 返回t +d 的时间点
-	//func (t Time) Sub(u Time) Duration {} // 返回 t-u
+	//func (t Time) Sub(e Time) Duration {} // 返回 t-e
 	//func (t Time) AddDate(years int, months int, days int) Time {} 返回增加了给出的年份
 
 	//是否是零时时间
 	isZero := time.Now().IsZero()
 	fmt.Printf("是否零时时间 %t\n",isZero) //是否零时时间 false
 
+	zeroTime,_ := time.Parse("2006-01-02 15:04:05","2018-10-22 00:00:00")
+	fmt.Printf("zeroTime 是否零时时间 %t\n",zeroTime.IsZero()) //zeroTime 是否零时时间 true
 
+	//zeroTime 一秒前
+	timeBefore,_ := time.Parse("2006-01-02 15:04:05","2018-10-21 23:59:59")
+	//zeroTime 一秒以后
+	timeAfter,_ := time.Parse("2006-01-02 15:04:05","2018-10-22 00:00:01")
 
+	//func (t Time) After(e Time)  可以理解为 After是判断t是u之后的时间 ,t after(晚) 于e
+	oneAfter := zeroTime.After(timeBefore)
+	twoAfter := zeroTime.After(timeAfter)
+	fmt.Printf("oneAfter %t  twoAfter %t\n",oneAfter,twoAfter)
+	//oneAfter true  twoAfter false
 
+	//func (t Time) Before(e Time)  可以理解为 Before是判断t是u之前的时间 ,t Before(早)于e
+	oneBefore := zeroTime.Before(timeBefore)
+	twoBefore := zeroTime.Before(timeAfter)
+	fmt.Printf("oneBefore %t  twoBefore %t\n",oneBefore,twoBefore)
+	//oneBefore false  twoBefore true
 }
