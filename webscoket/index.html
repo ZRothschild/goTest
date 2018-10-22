@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h4 id="retour"></h4>
+    <input type="text" id="text" />
+    <button id="btn">Send</button>
+    <script type="text/javascript">
+        var ws = new WebSocket('ws://localhost:5555/test/');
+        ws.onopen = (e) => {
+            console.log('connection');
+            document.getElementById('btn').addEventListener('click',(ev) => {
+                e.preventDefault();
+                var data = {
+                    'texts': document.getElementById('text').value,
+                    'flag' : 126,
+                    'bool' : true,
+                };
+                ws.send(JSON.stringify(data));
+            });
+        };
+        ws.onmessage = (e) => {
+            var msg = JSON.parse(e.data)
+            console.log(msg["texts"]);
+            document.getElementById("retour").innerHTML = `${msg["texts"]} - ${msg["flage"]} - ${msg["bool"]}`;
+        };
+        ws.onerror = (e) => {
+            console.log('error')
+        };
+        ws.onclose = (e) => {
+            delete ws;
+        };
+    </script>
+</body>
+</html>
