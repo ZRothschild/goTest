@@ -106,8 +106,7 @@ func main() {
 
 	time.Sleep(10 * time.Second)
 	fmt.Println("可以了，通知监控停止")
-	cancel()
-	//为了检测监控过是否停止，如果没有监控输出，就表示停止了
+	cancel() 
 	time.Sleep(5 * time.Second)
 }
 ```
@@ -134,7 +133,6 @@ func main() {
 	fmt.Println("可以了，通知监控停止")
 	cancel()
 	fmt.Println(1111)
-	//为了检测监控过是否停止，如果没有监控输出，就表示停止了
 }
 
 func watch(ctx context.Context, name string) {
@@ -178,7 +176,6 @@ func main() {
 	time.Sleep(10 * time.Second)
 	fmt.Println("可以了，通知监控停止")
 	cancel()
-	//为了检测监控过是否停止，如果没有监控输出，就表示停止了
 	time.Sleep(5 * time.Second)
 }
 
@@ -223,7 +220,6 @@ func main() {
 	fmt.Println("可以了，通知监控停止")
 	fmt.Println(ctx.Err())
 	cancel()
-	//为了检测监控过是否停止，如果没有监控输出，就表示停止了
 	time.Sleep(5 * time.Second)
 }
 

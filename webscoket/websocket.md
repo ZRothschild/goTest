@@ -1,3 +1,53 @@
+# webscoket 小例子
+
+### 功能介绍
+
+后台服务，开启*webscoket*监听指定端口，前端页面输入的数据，通过`js` `websocket`发送给后台服务，
+后台服务在把数据返回前端页面，前端页面接收数据，渲染到指定位置
+
+### main.go
+
+```go
+package main
+
+import (
+	"fmt"
+	"golang.org/x/net/websocket"
+	"net/http"
+	"reflect"
+)
+
+func test(ws *websocket.Conn)  {
+	data := map[string]interface{}{}
+	for {
+		err := websocket.JSON.Receive(ws,&data)
+		if err != nil {
+			fmt.Printf("err %v",err)
+			ws.Close()
+			break
+		}
+		fmt.Printf("Server receive : %v\n",data)
+		fmt.Printf("Type received : %s - %s - %s\n",reflect.TypeOf(data["texts"]),reflect.TypeOf(data["flage"]),reflect.TypeOf(data["bool"]))
+		data["texts"] = data["texts"]
+		data["flage"] = 234
+		data["bool"] = false
+		err2 := websocket.JSON.Send(ws,data)
+		if err2 != nil {
+			fmt.Println(err2)
+			break
+		}
+	}
+}
+
+func main()  {
+	http.Handle("/test/",websocket.Handler(test))
+	err := http.ListenAndServe(":5555",nil)
+	fmt.Printf("http %s\n",err)
+}
+```
+### index.html `es6`
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,3 +86,5 @@
     </script>
 </body>
 </html>
+```
+
