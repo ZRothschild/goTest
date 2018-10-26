@@ -1,3 +1,8 @@
+# time 包学习
+
+## 时间函数使用未包含，channel通道
+
+```go
 package main
 
 import (
@@ -159,7 +164,6 @@ func main()  {
 	//t.Round(  3m0s) = 14:15:00
 	//t.Round(3h0m0s) = 15:00:00
 
-
 	//func (t Time) Truncate(d Duration) Time {}
 	//类似Round，但是返回的是最接近但早于t的时间点；如果d <= 0，会返回t的拷贝,向下取
 	t, _ = time.Parse("2006 Jan 02 15:04:05", "2012 Dec 07 12:15:30.918273645")
@@ -276,5 +280,5 @@ func main()  {
 	//func (d Duration) Hours() float64
 	fmt.Printf("d.Hours %v\n",(30*time.Minute).Hours())
 	//d.Hours 0.5
-
 }
+```
