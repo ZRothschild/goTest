@@ -22,7 +22,7 @@ func test(ws *websocket.Conn)  {
 		data["flage"] = 234
 		data["bool"] = false
 		err2 := websocket.JSON.Send(ws,data)
-		if(err2 != nil){
+		if err2 != nil {
 			fmt.Println(err2)
 			break
 		}
