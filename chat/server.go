@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-var  onlineMap = make(map[string]net.Conn)
+var onlineMap = make(map[string]net.Conn)
 var chanQueues = make(chan string,1000)
 var chanQuit = make(chan bool)
 
@@ -21,13 +21,13 @@ func main()  {
 	go consumeMessage()
 	for  {
 		conn,err := listener.Accept()
+
 		onlineMap[conn.RemoteAddr().String()] = conn
-		for i := range onlineMap {
-			fmt.Printf("addr %s\n",i)
-		}
-		defer conn.Close()
+		fmt.Printf("addr %s\n",conn.RemoteAddr().String())
+		fmt.Printf("gid %d\n",os.Getpid())
 		if err != nil {
 			fmt.Printf("process err %v\n",err)
+			conn.Close()
 			os.Exit(1)
 		}
 		go process(conn)
@@ -63,11 +63,11 @@ func process(conn net.Conn)  {
 	buf := make([]byte,1024)
 	for  {
 		//把信息读取到buf 里面
-		leng ,err := conn.Read(buf)
+		len ,err := conn.Read(buf)
 		if err != nil {
 			break
 		}
-		message := string(buf[:leng])
+		message := string(buf[:len])
 		chanQueues <- message
 	}
 }
