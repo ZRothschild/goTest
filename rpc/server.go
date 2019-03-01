@@ -19,6 +19,12 @@ func (a *Arith) AddAction(arg *Arguments, resulte *int) error {
 
 func main() {
 	arith := new(Arith)
+
+	//typ := reflect.TypeOf(arith)
+	//rcvr := reflect.ValueOf(arith)
+	//sname := reflect.Indirect(rcvr).Type().Name()
+	//fmt.Printf("%v\n%#v\n%#v\n%v\n",typ,rcvr,sname,reflect.Indirect(rcvr))
+
 	rpc.RegisterName("Test", arith)
 	rpc.HandleHTTP()
 	err := http.ListenAndServe(":5555", nil)
