@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
 	"net/rpc"
 )
 
@@ -26,19 +24,24 @@ func main() {
 	//fmt.Printf("%v\n%#v\n%#v\n%v\n",typ,rcvr,sname,reflect.Indirect(rcvr))
 
 	rpc.RegisterName("Test", arith)
-	rpc.HandleHTTP()
-	err := http.ListenAndServe(":5555", nil)
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-	//tcpAdr,_ := net.ResolveTCPAddr("tcp",":5555")
-	//listen ,_ := net.ListenTCP("tcp",tcpAdr)
-	//for  {
-	//	conn,err := listen.Accept()
-	//	if err != nil{
-	//		fmt.Printf("error %v",err)
-	//		continue
-	//	}
-	//	rpc.ServeConn(conn)
+	/**   http
+	//rpc.HandleHTTP()
+	//err := http.ListenAndServe(":5555", nil)
+	//if err != nil {
+	//	fmt.Println(err.Error())
 	//}
+	**/
+
+	/**
+	tcpAdr,_ := net.ResolveTCPAddr("tcp",":5555")
+	listen ,_ := net.ListenTCP("tcp",tcpAdr)
+	for  {
+		conn,err := listen.Accept()
+		if err != nil{
+			fmt.Printf("error %v",err)
+			continue
+		}
+		rpc.ServeConn(conn)
+	}
+	**/
 }

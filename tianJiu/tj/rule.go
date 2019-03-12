@@ -16,6 +16,7 @@ var expired []int
 
 var self = make(map[string]TjSlice)
 
+//对比各自两张牌大小 1 s 大 0 c 大
 func (s TjSlice) Work(c TjSlice) int8 {
 	cb, ci := s.ComCoup(c)
 	if cb {
@@ -28,11 +29,12 @@ func (s TjSlice) Work(c TjSlice) int8 {
 	return s.ComNum(c)
 }
 
-//比较一对大小
+//比较一对大小  s 大于 c 返回 true 1
 func (s TjSlice) ComCoup(c TjSlice) (bool, int8) {
 	//看双方是否为一对
 	sCouple := IsCouple(s)
 	cCouple := IsCouple(c)
+	//双方都是一对
 	if sCouple && cCouple {
 		if s[0].Level > c[0].Level {
 			return true, 1
@@ -47,7 +49,7 @@ func (s TjSlice) ComCoup(c TjSlice) (bool, int8) {
 	return false, -1
 }
 
-//比较特殊大小
+//比较特殊大小  当为杠的时候判断哪一个的杠大
 func (s TjSlice) ComKing(c TjSlice) (bool, int8) {
 	sNum := IsKing(s)
 	cNum := IsKing(c)
@@ -55,7 +57,7 @@ func (s TjSlice) ComKing(c TjSlice) (bool, int8) {
 		return true, 1
 	} else if cNum > 0 && cNum > sNum {
 		return true, 0
-	} else if sNum > 0 {
+	} else if sNum == cNum && cNum > 0 { //当为杠的时候判断哪一个的杠大
 		if (sNum == 1 || sNum == 2) && Com(s, c) == 0 {
 			return true, 0
 		}
@@ -103,7 +105,7 @@ func IsKing(s TjSlice) int8 {
 	return level
 }
 
-//每一只牌对比
+//每一只牌对比 1 s 大  0 c 大
 func Com(s TjSlice, c TjSlice) int8 {
 	var (
 		sMax = s[0].Flag

@@ -1,28 +1,31 @@
 package main
 
 import (
-	"fmt"
+	"time"
 )
 
 func printHello(ch chan int) {
-	fmt.Println("Hello from printHello111")
-	ch <-2
-	//fmt.Println("Recieved i", i)
-	fmt.Println("Hello from printHello2222")
+	//fmt.Println("Hello from printHello111")
+	ch <- 2
+	//fmt.Println("Hello from printHello2222")
+	i := 1
+	i++
 }
 func main() {
-
 	ch := make(chan int)
 	go func() {
-		fmt.Println("Hello inline")
+		//fmt.Println("Hello inline")
 		ch <- 1
-		fmt.Println("Hello ")
+		//fmt.Println("Hello ")
+		j := 2
+		j++
 	}()
 	go printHello(ch)
-	fmt.Println("Hello from main")
-	i := <-ch
 
-	fmt.Println("Recieved i", i)
-	 <-ch
-	fmt.Println("Recieved j", 0)
+	time.Sleep(2)
+	//fmt.Println("Hello from main")
+	<-ch
+	//fmt.Println("Recieved i", i)
+	<-ch
+	//fmt.Println("Recieved j", j)
 }

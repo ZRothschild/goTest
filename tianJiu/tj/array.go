@@ -19,8 +19,8 @@ type Tj struct {
 	Number     int8   //牌点数
 	Child      int8   //0:武子 1:文子
 	Attributes int8   // 0:点  1:么 2:宫
-	Level      int8
-	Flag       int8
+	Level      int8   //对大小
+	Flag       int8   //单只大小
 }
 
 var Tjs = [32]Tj{
