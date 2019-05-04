@@ -1,15 +1,15 @@
 package main
 
 import (
+	"fmt"
 	"math/rand"
 	"time"
-	"fmt"
 )
 
-func main()  {
-	seed	:=	time.Now().UTC().UnixNano()
+func main() {
+	seed := time.Now().UTC().UnixNano()
 	fmt.Print(seed)
-	rng	:=	rand.New(rand.NewSource(seed))
+	rng := rand.New(rand.NewSource(seed))
 	a := randomPalindrome(rng)
 	fmt.Print(a)
 }

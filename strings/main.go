@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func main()  {
+func main() {
 	const n = 60
 	starttime := time.Now()
 	fibN := fib(n)

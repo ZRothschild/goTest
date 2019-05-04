@@ -7,8 +7,8 @@ import (
 
 var db *sql.DB
 
-func main()  {
-	db, _ = sql.Open("mysql",  "root:my06lucky12dog.@tcp(127.0.0.1:3306)/lv")
+func main() {
+	db, _ = sql.Open("mysql", "root:my06lucky12dog.@tcp(127.0.0.1:3306)/lv")
 
 	//Tx,_ := db.Begin()
 

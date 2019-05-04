@@ -1,32 +1,32 @@
 package main
 
 import (
-	"net"
 	"fmt"
+	"net"
 	"os"
 	"strings"
 )
 
 var onlineMap = make(map[string]net.Conn)
-var chanQueues = make(chan string,1000)
+var chanQueues = make(chan string, 1000)
 var chanQuit = make(chan bool)
 
-func main()  {
-	listener , err := net.Listen("tcp",":8080")
+func main() {
+	listener, err := net.Listen("tcp", ":8080")
 	defer listener.Close()
 	if err != nil {
-		fmt.Printf("listener err %v\n",err)
+		fmt.Printf("listener err %v\n", err)
 		os.Exit(1)
 	}
 	go consumeMessage()
-	for  {
-		conn,err := listener.Accept()
+	for {
+		conn, err := listener.Accept()
 
 		onlineMap[conn.RemoteAddr().String()] = conn
-		fmt.Printf("addr %s\n",conn.RemoteAddr().String())
-		fmt.Printf("gid %d\n",os.Getpid())
+		fmt.Printf("addr %s\n", conn.RemoteAddr().String())
+		fmt.Printf("gid %d\n", os.Getpid())
 		if err != nil {
-			fmt.Printf("process err %v\n",err)
+			fmt.Printf("process err %v\n", err)
 			conn.Close()
 			os.Exit(1)
 		}
@@ -34,23 +34,23 @@ func main()  {
 	}
 }
 
-func consumeMessage()  {
-	for  {
+func consumeMessage() {
+	for {
 		select {
-		case msg := <- chanQueues:
+		case msg := <-chanQueues:
 			doProcessMsg(msg)
-		case <-chanQuit :
+		case <-chanQuit:
 			break
 		}
 	}
 }
 
-func doProcessMsg(msg string)  {
-	content := strings.Split(msg,"#")
-	if len(content) > 0{
+func doProcessMsg(msg string) {
+	content := strings.Split(msg, "#")
+	if len(content) > 0 {
 		addr := content[0]
 		msgSend := content[1]
-		if  conn,ok := onlineMap[addr]; ok{
+		if conn, ok := onlineMap[addr]; ok {
 			_, err := conn.Write([]byte(msgSend))
 			if err != nil {
 				fmt.Println("写入错误咯 朋友")
@@ -59,11 +59,11 @@ func doProcessMsg(msg string)  {
 	}
 }
 
-func process(conn net.Conn)  {
-	buf := make([]byte,1024)
-	for  {
+func process(conn net.Conn) {
+	buf := make([]byte, 1024)
+	for {
 		//把信息读取到buf 里面
-		len ,err := conn.Read(buf)
+		len, err := conn.Read(buf)
 		if err != nil {
 			break
 		}

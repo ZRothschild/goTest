@@ -1,12 +1,12 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
-	"net/http"
 	"io/ioutil"
 	"log"
-	"bytes"
 	"mime/multipart"
+	"net/http"
 )
 
 func main() {

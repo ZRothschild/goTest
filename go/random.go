@@ -5,15 +5,14 @@ import (
 	"math/rand"
 	"time"
 )
+
 func main() {
 	//获取可能包含数字大小写字母长度为4的字符串
 	//kind 小于零返回可能包含数字小大写字母特殊字符
 	//kind 大于7返回可能包含数字大小写字母字符
-	by := kindRand(4,7)
-	fmt.Printf("rand %v\n",string(by))
+	by := kindRand(4, 7)
+	fmt.Printf("rand %v\n", string(by))
 }
-
-
 
 /**
  * len 随机码的位数
@@ -25,22 +24,22 @@ func main() {
  *      5    // 数字、大写字母
  *		6    // 大小写字母
  *		7    // 数字大小写字母
-*/
+ */
 func kindRand(len int, kind int) string {
 	//数字0ASCII值为48， 字符a ASCII值为97  字符A ASCII值为65
-	kindCp,kinds, result := kind,[][]int{[]int{10, 48}, []int{26, 97}, []int{26, 65},[]int{93,33}}, make([]byte, len)
+	kindCp, kinds, result := kind, [][]int{[]int{10, 48}, []int{26, 97}, []int{26, 65}, []int{93, 33}}, make([]byte, len)
 	//满足两种要求所有要随机找其中一种随机字符
-	randMap := map[int][2]int{4:[2]int{0,1}, 5:[2]int{0,2}, 6:[2]int{1,2}}
+	randMap := map[int][2]int{4: [2]int{0, 1}, 5: [2]int{0, 2}, 6: [2]int{1, 2}}
 	for i := 0; i < len; i++ {
 		//随机动态种子
 		rand.Seed(time.Now().UnixNano())
-		if kind < 0  {
+		if kind < 0 {
 			kindCp = 3
-		} else if kind > 3 && kind < 7  {
+		} else if kind > 3 && kind < 7 {
 			//rand.Intn 随机值是左闭右开区间
 			kindGap := rand.Intn(2)
 			kindCp = randMap[kind][kindGap]
-		}else if kind >= 7 {
+		} else if kind >= 7 {
 			kindCp = rand.Intn(3)
 		}
 		scope, base := kinds[kindCp][0], kinds[kindCp][1]

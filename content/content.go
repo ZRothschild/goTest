@@ -1,20 +1,20 @@
 package main
 
 import (
-	"time"
 	"context"
 	"fmt"
+	"time"
 )
 
-var key string="name"
-var keys string="names"
+var key string = "name"
+var keys string = "names"
 
 func main() {
-	ctx, cancel := context.WithDeadline(context.Background(),time.Now().Add(1*time.Second))
+	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(1*time.Second))
 	//附加值
-	valueCtx:=context.WithValue(ctx,key,"【监控1】")
+	valueCtx := context.WithValue(ctx, key, "【监控1】")
 	go watch(valueCtx)
-	aa := context.WithValue(valueCtx,keys,"【监控3】")
+	aa := context.WithValue(valueCtx, keys, "【监控3】")
 	go watch(aa)
 	time.Sleep(10 * time.Second)
 	fmt.Println("可以了，通知监控停止")
@@ -29,11 +29,11 @@ func watch(ctx context.Context) {
 		select {
 		case <-ctx.Done():
 			//取出值
-			fmt.Println(ctx.Value(key),"监控退出，停止了...")
+			fmt.Println(ctx.Value(key), "监控退出，停止了...")
 			return
 		default:
 			//取出值
-			fmt.Println(ctx.Value(key),"goroutine监控中...")
+			fmt.Println(ctx.Value(key), "goroutine监控中...")
 			time.Sleep(2 * time.Second)
 		}
 	}

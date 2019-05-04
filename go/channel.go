@@ -4,6 +4,7 @@ import (
 	"fmt"
 	//"time"
 )
+
 //prints to stdout and puts an int on channel
 func printHello(ch chan int) {
 	fmt.Println("Hello from printHello")
@@ -11,7 +12,7 @@ func printHello(ch chan int) {
 	ch <- 2
 }
 func main() {
-	ch := make(chan int,2)
+	ch := make(chan int, 2)
 	go func() {
 		fmt.Println("Hello inline")
 		//send a value on channel
@@ -24,6 +25,6 @@ func main() {
 	fmt.Println("Recieved ", i)
 	//time.Sleep(2*time.Second)
 	close(ch)
-	b :=<-ch
+	b := <-ch
 	fmt.Println("Recievedb", b)
 }

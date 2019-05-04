@@ -1,37 +1,37 @@
 package test
 
 import (
-	"net"
 	"fmt"
+	"net"
 	"os"
 )
 
-func main()  {
-	listener , err := net.Listen("tcp",":8080")
+func main() {
+	listener, err := net.Listen("tcp", ":8080")
 	defer listener.Close()
 	if err != nil {
-		fmt.Printf("listener err %v\n",err)
+		fmt.Printf("listener err %v\n", err)
 		os.Exit(1)
 	}
-	for  {
-		conn,err := listener.Accept()
-		go process(conn,err)
+	for {
+		conn, err := listener.Accept()
+		go process(conn, err)
 	}
 }
 
-func process(conn net.Conn,err error)  {
+func process(conn net.Conn, err error) {
 	if err != nil {
-		fmt.Printf("process err %v\n",err)
+		fmt.Printf("process err %v\n", err)
 		os.Exit(1)
 	}
-	buf := make([]byte,1024)
+	buf := make([]byte, 1024)
 	defer conn.Close()
-	for  {
+	for {
 		//把信息读取到buf 里面
-		_ , err = conn.Read(buf)
+		_, err = conn.Read(buf)
 		if err != nil {
 			break
 		}
-		fmt.Printf("message %s\n",string(buf))
+		fmt.Printf("message %s\n", string(buf))
 	}
 }
