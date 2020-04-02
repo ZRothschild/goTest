@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+<head>
+    <title>Socket.IO chat</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font: 13px Helvetica, Arial;
+        }
+        form {
+            background: #000;
+            padding: 3px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        form input {
+            border: 0;
+            padding: 10px;
+            width: 90%;
+            margin-right: .5%;
+        }
+        form button {
+            width: 9%;
+            background: rgb(130, 224, 255);
+            border: none;
+            padding: 10px;
+        }
+        #messages {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+        #messages li {
+            padding: 5px 10px;
+        }
+        #messages li:nth-child(odd) {
+            background: #eee;
+        }
+        #nameSend {
+
+        }
+    </style>
+</head>
+<body>
+    <div id="box" style="display: none">
+        <ul id="messages"></ul>
+        <form id="messagesSend" action="">
+            <input id="m" autocomplete="off" /><button>Send</button>
+        </form>
+    </div>
+    <div class="form">
+        <h3 class="title">What's your nickname?</h3>
+        <form id="nameSend" action="" onsubmit="return false;">
+            <input class="usernameInput" type="text" maxlength="14" /><button>Send</button>
+        </form>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+        var userName = window.localStorage.getItem("userName")
+        // localStorage.removeItem("userName")
+        if (userName){
+            $("#box").css("display",'block')
+            $(".form").css("display",'none')
+        }
+        var socket = io();
+        var s2 = io("/chat");
+        $('#nameSend').submit(function () {
+            var username = $('.usernameInput').val().trim()
+            if(userName === username){
+             return window.prompt("已登录过 "+username)
+            }
+            //用户登录
+            s2.emit('login', username,function (msg) {
+                window.localStorage.setItem("userName",msg)
+                $("#box").css("display",'block')
+                $(".form").css("display",'none')
+            });
+            return
+        })
+        s2.on('reply', function (data) {
+            console.log(data)
+            $('#messages').append($('<li>').text(data.name+"=> "+data.msg));
+        });
+        $('#messagesSend').submit(function () {
+            s2.emit('msg', {msg:$('#m').val(), name:userName});
+            $('#m').val('');
+            return false;
+        });
+    </script>
+</body>
+</html>
