@@ -39,9 +39,9 @@ func main() {
 	var result Result
 	db.Table("users").Select("name, age").Where("name = ?", "Antonio").Scan(&result)
 
-	db, _ = sql.Open("mysql", "root:nm123456@tcp(127.0.0.1:3306)/test")
+	d, _ := sql.Open("mysql", "root:nm123456@tcp(127.0.0.1:3306)/test")
 	defer db.Close()
-	Stmt, err := db.Prepare("select name,age from users where id = ?")
+	Stmt, err := d.Prepare("select name,age from users where id = ?")
 	if err != nil {
 		fmt.Printf("%s\n", err)
 	}

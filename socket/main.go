@@ -25,17 +25,13 @@ func main() {
 	defer rabbitMq.Close()
 	config.FailOnError(err, "amqp.Dial")
 
-	config.Sockeio(server, collection, rabbitMq)
+	config.SocketIo(server, collection, rabbitMq)
 
 	go server.Serve()
 	defer server.Close()
 	http.Handle("/socket.io/", server)
 	http.Handle("/", http.FileServer(http.Dir("./asset")))
-	http.Handle("/dataList", http.HandlerFunc(list))
+	http.Handle("/dataList", http.HandlerFunc(config.List))
 	log.Println("Serving at localhost:8080...")
 	log.Fatal(http.ListenAndServe(":8080", nil))
-}
-
-func list(w http.ResponseWriter, r *http.Request) {
-
 }

@@ -59,39 +59,50 @@
             <input class="usernameInput" type="text" maxlength="14" /><button>Send</button>
         </form>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
-    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-    <script>
-        var userName = window.localStorage.getItem("userName")
-        // localStorage.removeItem("userName")
-        if (userName){
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script>
+    function loadData(){
+        $.ajax({
+            url: "/dataList",
+            context: {},
+            success: function(data){
+                data && data.forEach(function (v,k) {
+                    $('#messages').append($('<li>').text(v.name+"=> "+v.msg));
+                })
+            }});
+    }
+    window.onload=function(){
+        loadData()
+    }
+    var userName = window.localStorage.getItem("userName")
+    // localStorage.removeItem("userName")
+    if (userName){
+        $("#box").css("display",'block')
+        $(".form").css("display",'none')
+    }
+    var socket = io();
+    var s2 = io("/chat");
+    $('#nameSend').submit(function () {
+        var username = $('.usernameInput').val().trim()
+        if(userName === username){
+         return window.prompt("已登录过 "+username)
+        }
+        s2.emit('login', username,function (msg) { //用户登录
+            window.localStorage.setItem("userName",msg)
             $("#box").css("display",'block')
             $(".form").css("display",'none')
-        }
-        var socket = io();
-        var s2 = io("/chat");
-        $('#nameSend').submit(function () {
-            var username = $('.usernameInput').val().trim()
-            if(userName === username){
-             return window.prompt("已登录过 "+username)
-            }
-            //用户登录
-            s2.emit('login', username,function (msg) {
-                window.localStorage.setItem("userName",msg)
-                $("#box").css("display",'block')
-                $(".form").css("display",'none')
-            });
-            return
-        })
-        s2.on('reply', function (data) {
-            console.log(data)
-            $('#messages').append($('<li>').text(data.name+"=> "+data.msg));
         });
-        $('#messagesSend').submit(function () {
-            s2.emit('msg', {msg:$('#m').val(), name:userName});
-            $('#m').val('');
-            return false;
-        });
-    </script>
+        return
+    })
+    s2.on('reply', function (data) {
+        $('#messages').append($('<li>').text(data.name+"=> "+data.msg));
+    });
+    $('#messagesSend').submit(function () {
+        s2.emit('msg', {msg:$('#m').val(), name:userName});
+        $('#m').val('');
+        return false;
+    });
+</script>
 </body>
 </html>

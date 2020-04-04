@@ -10,12 +10,10 @@ import (
 	"time"
 )
 
-func Sockeio(server *socketio.Server, mongoCollection *mongo.Database, rabbitMq *amqp.Connection) {
+func SocketIo(server *socketio.Server, mongoCollection *mongo.Database, rabbitMq *amqp.Connection) {
 	ctx := context.Background()
 
 	server.OnConnect("/chat", func(s socketio.Conn) error {
-		s.SetContext("")
-		fmt.Println("connected:", s.ID())
 		s.Join("Broadcast")
 		return nil
 	})
@@ -42,18 +40,16 @@ func Sockeio(server *socketio.Server, mongoCollection *mongo.Database, rabbitMq 
 	})
 
 	server.OnEvent("/chat", "msg", func(s socketio.Conn, data map[string]string) {
-		dataMsg := bson.M{"name": data["name"], "msg": data["msg"], "time": time.Now().Unix()}
+		dataMsg := bson.M{"name": data["name"], "msg": data["msg"], "add_time": time.Now().Unix()}
 		dataMsgCollection := mongoCollection.Collection("numbers")
 		_, err := dataMsgCollection.InsertOne(ctx, dataMsg)
 		if err != nil {
-			fmt.Printf("dataMsgCollection.InsertOne => %s", err)
+			FailOnError(err, "dataMsgCollection.InsertOne")
 		}
-		//rabbitmq 异步写入数据
-		err = SendMsg(rabbitMq, dataMsg)
+		err = SendMsg(rabbitMq, dataMsg) //rabbitmq 异步写入数据
 		if err != nil {
-			fmt.Printf("SendMsg => %s", err)
+			FailOnError(err, "rabbitMq SendMsg")
 		}
-
 		server.BroadcastToRoom("/chat", "Broadcast", "reply", data)
 	})
 
