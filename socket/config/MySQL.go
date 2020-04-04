@@ -5,8 +5,10 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-var Db gorm.DB
-
-func test() {
-
+func MySqlDb() *gorm.DB {
+	MySqlDb, err := gorm.Open("mysql", "root:Nm123456.@/test?charset=utf8&parseTime=True&loc=Local")
+	if err != nil {
+		FailOnError(err, "gorm.Open")
+	}
+	return MySqlDb.LogMode(true) //打印mysql 日子
 }

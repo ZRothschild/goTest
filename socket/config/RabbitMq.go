@@ -12,7 +12,6 @@ func SendMsg(conn *amqp.Connection, data map[string]interface{}) error {
 		return err
 	}
 	defer ch.Close()
-
 	q, err := ch.QueueDeclare(
 		"chatMsgQueue1", // name
 		true,            // durable
@@ -43,11 +42,7 @@ func SendMsg(conn *amqp.Connection, data map[string]interface{}) error {
 }
 
 //消费消息
-func ConsumeMsg(conn *amqp.Connection) <-chan amqp.Delivery {
-	ch, err := conn.Channel()
-	FailOnError(err, "Failed to open a channel")
-	defer ch.Close()
-
+func ConsumeMsg(ch *amqp.Channel) <-chan amqp.Delivery {
 	q, err := ch.QueueDeclare(
 		"chatMsgQueue1", // name
 		true,            // durable
@@ -57,14 +52,12 @@ func ConsumeMsg(conn *amqp.Connection) <-chan amqp.Delivery {
 		nil,             // arguments
 	)
 	FailOnError(err, "Failed to declare a queue")
-
 	err = ch.Qos(
 		1,     // prefetch count
 		0,     // prefetch size
 		false, // global
 	)
 	FailOnError(err, "Failed to set QoS")
-
 	msg, err := ch.Consume(
 		q.Name,            // queue
 		"chatMsgConsume1", // consumer

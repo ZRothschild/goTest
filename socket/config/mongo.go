@@ -8,15 +8,16 @@ import (
 	"time"
 )
 
-func MongoClient() (*mongo.Client, error) {
+func MongoClient() (*mongo.Database, error) {
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://localhost:27017"))
 	if err != nil {
-		return client, err
+		return &mongo.Database{}, err
 	}
-	err = client.Ping(ctx, readpref.Primary())
-	if err != nil {
-		return client, err
+	if err = client.Ping(ctx, readpref.Primary()); err != nil {
+		return &mongo.Database{}, err
 	}
-	return client, err
+
+	database := client.Database("testing")
+	return database, err
 }

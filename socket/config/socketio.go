@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func SocketIo(server *socketio.Server, mongoCollection *mongo.Database, rabbitMq *amqp.Connection) {
+func SocketIo(server *socketio.Server, mongoDb *mongo.Database, rabbitMq *amqp.Connection) {
 	ctx := context.Background()
 
 	server.OnConnect("/chat", func(s socketio.Conn) error {
@@ -24,15 +24,14 @@ func SocketIo(server *socketio.Server, mongoCollection *mongo.Database, rabbitMq
 			Key   string
 			Value string
 		}
-		numbersCollection := mongoCollection.Collection("numbers")
-		err := numbersCollection.FindOne(ctx, filter).Decode(&result)
-		if err != nil && err != mongo.ErrNoDocuments {
+		numbersCollection := mongoDb.Collection("numbers")
+		if err := numbersCollection.FindOne(ctx, filter).Decode(&result); err != nil && err != mongo.ErrNoDocuments {
 			return err.Error()
 		}
 		if result.Value == name {
 			return "已经登录"
 		}
-		_, err = numbersCollection.InsertOne(ctx, filter)
+		_, err := numbersCollection.InsertOne(ctx, filter)
 		if err != nil {
 			return err.Error()
 		}
@@ -41,13 +40,13 @@ func SocketIo(server *socketio.Server, mongoCollection *mongo.Database, rabbitMq
 
 	server.OnEvent("/chat", "msg", func(s socketio.Conn, data map[string]string) {
 		dataMsg := bson.M{"name": data["name"], "msg": data["msg"], "add_time": time.Now().Unix()}
-		dataMsgCollection := mongoCollection.Collection("numbers")
+		dataMsgCollection := mongoDb.Collection("numbers")
 		_, err := dataMsgCollection.InsertOne(ctx, dataMsg)
 		if err != nil {
 			FailOnError(err, "dataMsgCollection.InsertOne")
 		}
-		err = SendMsg(rabbitMq, dataMsg) //rabbitmq 异步写入数据
-		if err != nil {
+
+		if err = SendMsg(rabbitMq, dataMsg); err != nil { //rabbitmq 异步写入数据
 			FailOnError(err, "rabbitMq SendMsg")
 		}
 		server.BroadcastToRoom("/chat", "Broadcast", "reply", data)

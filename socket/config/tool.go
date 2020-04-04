@@ -2,7 +2,6 @@ package config
 
 import (
 	"encoding/json"
-	"github.com/jinzhu/gorm"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -24,16 +23,15 @@ func FailOnError(err error, msg string) {
 }
 
 func List(w http.ResponseWriter, r *http.Request) {
-	client, err := MongoClient()
+	mongoDb, err := MongoClient()
 	FailOnError(err, "MongoClient")
+	numbersCollection := mongoDb.Collection("numbers")
 
-	collection := client.Database("testing")
-	numbersCollection := collection.Collection("numbers")
 	optsLimit := options.Find().SetLimit(10)
 	optsSort := options.Find().SetSort(bson.M{"add_time": 1})
 	filter := bson.D{}
 	cursor, err := numbersCollection.Find(nil, filter, optsLimit, optsSort)
-	if cursor == nil {
+	if cursor != nil {
 		defer cursor.Close(nil)
 	}
 	if err != nil && err != mongo.ErrNilDocument {
@@ -44,11 +42,8 @@ func List(w http.ResponseWriter, r *http.Request) {
 
 	var results []Test
 	if cursor == nil || err == mongo.ErrNilDocument {
-		db, _ := gorm.Open("mysql", "root:Nm123456.@/test?charset=utf8&parseTime=True&loc=Local")
-		db.LogMode(true) //打印mysql 日子
-		defer db.Close()
-
-		db = db.Debug().Table("tests").Limit(10).Order("add_time", true).Find(&results)
+		defer MySqlDb().Close()
+		MySqlDb().Debug().Table("tests").Limit(10).Order("add_time", true).Find(&results)
 		if err := json.NewEncoder(w).Encode(results); err != nil {
 			FailOnError(err, "json.NewEncoder(w)")
 		}

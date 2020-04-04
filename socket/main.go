@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/ZRothschild/goTest/socket/config"
 	socketio "github.com/googollee/go-socket.io"
-	"github.com/jinzhu/gorm"
 	"github.com/streadway/amqp"
 	"log"
 	"net/http"
@@ -13,19 +12,14 @@ func main() {
 	server, err := socketio.NewServer(nil)
 	config.FailOnError(err, "socketio.NewServer")
 
-	client, err := config.MongoClient()
+	mongoDb, err := config.MongoClient()
 	config.FailOnError(err, "MongoClient")
-	collection := client.Database("testing")
-
-	db, err := gorm.Open("mysql", "root:Nm123456.@/test?charset=utf8&parseTime=True&loc=Local")
-	defer db.Close()
-	config.FailOnError(err, "gorm.Open")
 
 	rabbitMq, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
 	defer rabbitMq.Close()
 	config.FailOnError(err, "amqp.Dial")
 
-	config.SocketIo(server, collection, rabbitMq)
+	config.SocketIo(server, mongoDb, rabbitMq)
 
 	go server.Serve()
 	defer server.Close()
