@@ -34,6 +34,10 @@ body,html{
 .container{
     align-content: center;
 }
+.card_login {
+    display: inline-block;
+    vertical-align: middle;
+}
 .search{
     border-radius: 15px 0 0 15px !important;
     background-color: rgba(0,0,0,0.3) !important;

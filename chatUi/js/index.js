@@ -1,4 +1,10 @@
 window.onload =function() {
+    var user = window.localStorage.getItem("user")
+    user = JSON.parse(user)
+    if (!user || user.email) {
+        window.location = '/index.html'
+    }
+
     $(".contacts_body .contacts li").click(function(e){
         $(".contacts_body .contacts li").removeClass("active");
         $(e.currentTarget).addClass("active");

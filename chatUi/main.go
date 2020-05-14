@@ -1,9 +1,14 @@
 package main
 
 import (
+	"encoding/json"
+	"github.com/ZRothschild/goTest/chatUi/lib"
+	"github.com/ZRothschild/goTest/socket/config"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
+	"time"
 	// "encoding/json"
 	// "github.com/ZRothschild/goTest/chatUi/lib"
 	// "github.com/ZRothschild/goTest/socket/config"
@@ -15,8 +20,40 @@ import (
 	// "context"
 )
 
+var (
+	userTable string = "test"
+)
+
+type User struct {
+	Email  string `json:"email"`
+	Avatar string `json:"avatar"`
+}
+
+var imgArr []string
+
 func main() {
 	serveMux := http.NewServeMux()
+	//用户注册
+	serveMux.HandleFunc("/login", func(writer http.ResponseWriter, request *http.Request) {
+		var user User
+		if err := json.NewDecoder(request.Body).Decode(&user); err != nil {
+			lib.Log(err, "json.NewDecoder(request.Body)")
+			return
+		}
+		var imgArr = []string{"/img/2.jpeg", "/img/3.jpeg", "./img/1.png"}
+		rand.Seed(time.Now().UnixNano())
+		user.Avatar = imgArr[rand.Intn(3)]
+
+		if err := config.MySqlDb().Debug().Table(userTable).Create(&userTable).Error; err != nil {
+			config.FailOnError(err, "插入失败")
+		}
+
+		writer.Header().Set("content-type", "application/json;charset=utf-8")
+		if err := json.NewEncoder(writer).Encode(user); err != nil {
+			lib.Log(err, "json.NewEncoder(writer)")
+			return
+		}
+	})
 	path, _ := os.Getwd()
 	hand := http.StripPrefix("/", http.FileServer(http.Dir(path)))
 	serveMux.Handle("/", hand)
