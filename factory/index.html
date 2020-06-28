@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+</head>
+<body>
+<h1>用户名:{{.Name}},角色{{.Role}}</h1>
+<form action="./data" method="get">
+    <p>First name: <input type="text" name="fname" /></p>
+    <p>Last name: <input type="text" name="lname" /></p>
+</form>
+<button id="btn">提交数据</button>
+</body>
+</html>
+<script type="text/javascript">
+    $("#btn").click(function(){
+        var fname =  $(" input[name='fname']").val()
+        var lname = $(" input[name='lname']").val()
+        var url = "/data?fname="+fname+"&lname="+fname
+        console.log(url)
+            $.ajax({
+            type: "get",
+            // dataType: "json",
+            url:url,
+            // data:{account:account},
+            success: function (data) {
+            }
+        });
+    })
+</script>
