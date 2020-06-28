@@ -29,11 +29,9 @@ type User struct {
 	Avatar string `json:"avatar"`
 }
 
-var imgArr []string
-
 func main() {
 	serveMux := http.NewServeMux()
-	//用户注册
+	// 用户注册
 	serveMux.HandleFunc("/login", func(writer http.ResponseWriter, request *http.Request) {
 		var user User
 		if err := json.NewDecoder(request.Body).Decode(&user); err != nil {
