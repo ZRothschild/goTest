@@ -24,7 +24,7 @@ require (
 	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/mattn/goreman v0.3.5 // indirect
 	github.com/moul/http2curl v1.0.0 // indirect
-	github.com/nsqio/go-nsq v1.0.8 // indirect
+	github.com/nsqio/go-nsq v1.0.8
 	github.com/onsi/ginkgo v1.12.0 // indirect
 	github.com/onsi/gomega v1.9.0 // indirect
 	github.com/smartystreets/goconvey v1.6.4 // indirect

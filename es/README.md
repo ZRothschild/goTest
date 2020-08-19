@@ -1,6 +1,8 @@
 # 1. elasticsearch 运行
-1. / bin/elasticsearch -d 后台运行
-2. http://127.0.0.1:9200/ 查看是否运行中
+
+1. http://127.0.0.1:9200/ 查看是否运行中
+2. /usr/local/soft/es/bin/elasticsearch
+3. ./bin/elasticsearch -d 后台运行
 
 > elasticsearch.yml
 ```yaml
