@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"os"
 	"sync"
 )
 
@@ -82,25 +80,37 @@ func (cMap *ConcurrentMap) LoadOrStore(key int64, value []int64) (actual []int64
 }
 
 func main() {
-	//O_APPEND 添加写  O_CREATE 不存在则生成   O_WRONLY 只写模式
-	f, err := os.OpenFile("./text.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		log.Println(err)
-	}
-	defer f.Close()
-	//时间展示格式  LstdFlags
-	logger := log.New(f, "prefix ", log.LstdFlags)
-	logger.Println("text to append")
-	logger.Println("more text to append")
 
-	var cM = NewConcurrentMap()
-	for _, v := range Mock {
-		go func(v Data) {
-			cM.SetOrStore(v.Id, v.Value)
-		}(v)
-	}
+	// fmt.Println("hell world")
+	// test()
+	// fmt.Println("hell world")
+	// time.Sleep(223345)
+	// //O_APPEND 添加写  O_CREATE 不存在则生成   O_WRONLY 只写模式
+	// f, err := os.OpenFile("./text.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	// if err != nil {
+	// 	log.Println(err)
+	// }
+	// defer f.Close()
+	// //时间展示格式  LstdFlags
+	// logger := log.New(f, "prefix ", log.LstdFlags)
+	// logger.Println("text to append")
+	// logger.Println("more text to append")
+	//
+	// var cM = NewConcurrentMap()
+	// for _, v := range Mock {
+	// 	go func(v Data) {
+	// 		cM.SetOrStore(v.Id, v.Value)
+	// 	}(v)
+	// }
+	//
+	// va := cM.Get()
+	// fmt.Printf("==== %#v\n", va)
 
-	va := cM.Get()
-	fmt.Printf("==== %#v\n", va)
+}
 
+func test() {
+	go func() {
+		fmt.Println("test")
+		// time.Sleep(98523)
+	}()
 }

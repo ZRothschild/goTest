@@ -6,7 +6,9 @@ import (
 	"io/ioutil"
 	"log"
 	"mime/multipart"
+	"mime/quotedprintable"
 	"net/http"
+	"strings"
 )
 
 func main() {
@@ -32,6 +34,8 @@ func main() {
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
+	quotedprintable.NewReader(strings.NewReader(""))
+	// multipart.NewReader(resp.Body,"---------").ReadForm(100)
 	if err != nil {
 		log.Printf("body %s \n", err)
 	}

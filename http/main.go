@@ -9,9 +9,9 @@ import (
 )
 
 type Data struct {
-	Email string `json:"email"`
-	Password string `json:"password"`
-	Captcha string `json:"captcha"`
+	Email        string `json:"email"`
+	Password     string `json:"password"`
+	Captcha      string `json:"captcha"`
 	VerifyString string `json:"verify_string"`
 }
 
@@ -57,37 +57,38 @@ func (db database) price(w http.ResponseWriter, req *http.Request) {
 }
 
 //测试json
-func (db database) test (w http.ResponseWriter, req *http.Request) {
+func (db database) test(w http.ResponseWriter, req *http.Request) {
 	ioReadCloser := req.Body
-	fmt.Printf("ioReadCloser %v\n",ioReadCloser)
+	fmt.Printf("ioReadCloser %v\n", ioReadCloser)
 
 	tetIo := ioReadCloser
 	//读取了 ioReadCloser 就会为空 可以看 req 变化就可知
-	reqBody,err := ioutil.ReadAll(ioReadCloser)
+	reqBody, err := ioutil.ReadAll(ioReadCloser)
 	if err != nil {
-		fmt.Errorf("%s\n",err)
+		fmt.Errorf("%s\n", err)
 	}
 	var reqData Data
-	err = json.Unmarshal(reqBody,&reqData)
+	err = json.Unmarshal(reqBody, &reqData)
 	if err != nil {
-		fmt.Printf("reqData => %s\n",err)
+		fmt.Printf("reqData => %s\n", err)
 	}
-	fmt.Printf("%v\n",reqData)
+	fmt.Printf("%v\n", reqData)
 
 	var mapData map[string]string
-	err = json.Unmarshal(reqBody,&mapData)
+	err = json.Unmarshal(reqBody, &mapData)
 	if err != nil {
-		fmt.Errorf("mapData %s\n",err)
+		fmt.Errorf("mapData %s\n", err)
 	}
-	fmt.Printf("%v\n",mapData)
+	fmt.Printf("%v\n", mapData)
 
 	var reqDataDe Data
 	//是取地址改变了  ioReadCloser buff 已经被读取过了
 	json.NewDecoder(tetIo).Decode(&reqDataDe)
-	fmt.Printf("reqDataDe => %v\n",reqDataDe)
+	fmt.Printf("reqDataDe => %v\n", reqDataDe)
 
 	reqStr := string(reqBody)
-	fmt.Printf("%s\n",reqStr)
+	fmt.Printf("%s\n", reqStr)
+	http.Redirect(w, req, "http://127.0.0.1:8080/list", http.StatusMovedPermanently)
 }
 
 // mux := http.NewServeMux()

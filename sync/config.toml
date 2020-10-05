@@ -1,0 +1,63 @@
+[weiXin]
+domain = "https://api.weixin.qq.com"
+
+[default]
+    [default.logger]
+      time_format = "2006/01/02 15:04:05.000 -0700"
+      level = "info"
+      extra = ""
+    [default.logger.local.file]
+      formatter = "json"
+      [default.logger.local.file.rotation]
+        hours = 24
+        count = 7
+        postfix = ".%Y%m%d%H%M"
+      [default.logger.local.file.path]
+         panic = "panic"
+         fatal = "fatal"
+         error = "error"
+         warn =  "warn"
+         debug = "debug"
+         trace = "trace"
+         info =  "info"
+
+[recovery]
+    [recovery.logger]
+      time_format = "2006/01/02 15:04:05.000 -0700"
+      level = "info" # 不写默认是info
+      extra = "" # 不写默认是info
+    [recovery.logger.local.file]
+      formatter = "json"
+      [recovery.logger.local.file.rotation]
+        hours = 24
+        count = 7
+        postfix = ".%Y%m%d%H%M"
+      [recovery.logger.local.file.path]
+         panic = "panic"
+         fatal = "fatal"
+         error = "error"
+         warn =  "warn"
+         debug = "debug"
+         trace = "trace"
+         info =  "info"
+[amqp]
+    [amqp.refund]
+        servers = "amqp://guest:guest@192.168.2.232:5672/" # 服务地址
+        name = "退款队列" # 中文名称标记
+        queue = "refund_timeout_queue" # 队列名称
+        delay_queue = "refund_delay_timeout_queue" # 延迟队列名称 真正处理的消息的队列
+        exchange = "refund_timeout_exchange" # 交换机名称
+        delay_exchange = "refund_delay_timeout_exchange" # 交换机名称
+        timeout = 5000 # 超时时间  【消息进入 refund_timeout_queue后，过了5000ms 即 5s 会自动进入 refund_delay_timeout_queue这个队列】
+        kid = "direct" #类型 【fanout,direct,topic,header】
+        routing_key = "refund_routing_key" # 这个值可以用空格设置多个  但是work队列时候只能绑定一个
+        delay_routing_key = "refund_delay_routing_key" # 字符串
+        content_type = "application/json" # 数据格式
+        durable = true  #
+        auto_delete = false #
+        internal = false #
+        no_wait = false #
+        exclusive = false #
+        auto_ack = true #
+        no_local = false #
+        log = ""
