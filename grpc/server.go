@@ -1,12 +1,12 @@
 package main
 
 import (
-	"../example"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"log"
 	"net"
+	"rpc/example"
 	"strings"
 )
 

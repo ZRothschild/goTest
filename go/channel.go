@@ -3,10 +3,76 @@ package main
 import (
 	"fmt"
 	"golang.org/x/sync/errgroup"
-	// "time"
+	"sync"
+	"sync/atomic"
 )
 
+// Lock try lock
+type Lock struct {
+	c chan struct{}
+}
+
+// NewLock generate a try lock
+func NewLock() Lock {
+	var l Lock
+	l.c = make(chan struct{}, 1)
+	l.c <- struct{}{}
+	return l
+}
+
+// Lock try lock, return lock result
+func (l Lock) Lock() bool {
+	lockResult := false
+	select {
+	case <-l.c:
+		lockResult = true
+	default:
+	}
+	return lockResult
+}
+
+// Unlock , Unlock the try lock
+func (l Lock) Unlock() {
+	l.c <- struct{}{}
+}
+
 func main() {
+	var counter int64
+	var l = NewLock()
+	var wg sync.WaitGroup
+	for i := 0; i < 10; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			if !l.Lock() {
+				// log error
+				println("lock failed")
+				return
+			}
+			counter++
+			println("current counter", counter)
+			l.Unlock()
+		}()
+	}
+	wg.Wait()
+
+	return
+
+	for i := 0; i < 1000; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			// l.RLock()
+			// counter++
+			atomic.AddInt64(&counter, 1)
+			// l.RUnlock()
+		}()
+	}
+
+	wg.Wait()
+	println(counter)
+
+	return
 	var (
 		userChan    = make(chan User, 1)
 		group       = new(errgroup.Group)

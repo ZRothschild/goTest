@@ -1,10 +1,10 @@
 package main
 
 import (
-	"../example"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"log"
+	"rpc/example"
 )
 
 // 定义请求地址

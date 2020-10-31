@@ -39,6 +39,7 @@ type database map[string]dollars
 
 //list
 func (db database) list(w http.ResponseWriter, req *http.Request) {
+	fmt.Fprintf(w, "%#v", "数据哈哈")
 	for item, price := range db {
 		fmt.Fprintf(w, "%s: %f\n", item, price)
 	}
@@ -62,7 +63,7 @@ func (db database) test(w http.ResponseWriter, req *http.Request) {
 	fmt.Printf("ioReadCloser %v\n", ioReadCloser)
 
 	tetIo := ioReadCloser
-	//读取了 ioReadCloser 就会为空 可以看 req 变化就可知
+	// 读取了 ioReadCloser 就会为空 可以看 req 变化就可知
 	reqBody, err := ioutil.ReadAll(ioReadCloser)
 	if err != nil {
 		fmt.Errorf("%s\n", err)
