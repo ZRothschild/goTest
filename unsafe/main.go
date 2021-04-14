@@ -1,8 +1,12 @@
 package main
 
-import "unsafe"
+import (
+	"fmt"
+	"unsafe"
+)
 
-func main()  {
-	var t int
+func main() {
+	var t int = 3
 	tP := *(*int)(unsafe.Pointer(&t))
+	fmt.Printf("%d\n", tP)
 }

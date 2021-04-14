@@ -16,10 +16,4 @@ func main() {
 	p.Put(1)
 	b := p.Get().(int)
 	fmt.Println(a, b)
-
-	num := 5
-	numPointer := &num
-
-	flnum := (*float32)(unsafe.Pointer(numPointer))
-	fmt.Println(flnum)
 }

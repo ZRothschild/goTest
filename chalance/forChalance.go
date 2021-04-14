@@ -16,7 +16,7 @@ func main() {
 	}
 	fmt.Println("ggggggggg")
 	//
-	t, err := time.Parse("2006-01-02 ", "2018-09-30 10:48:20")
+	t, err := time.Parse("2006-01-02 15:04:05", "2018-09-30 10:48:20")
 
 	fmt.Println(err)
 	fmt.Println("ggggggggg")

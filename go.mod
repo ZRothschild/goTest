@@ -17,6 +17,7 @@ require (
 	github.com/gorilla/rpc v1.2.0
 	github.com/gorilla/websocket v1.4.1
 	github.com/graphql-go/graphql v0.7.9
+	github.com/iGoogle-ink/gopay v1.5.37 // indirect
 	github.com/imkira/go-interpol v1.1.0 // indirect
 	github.com/jinzhu/gorm v1.9.12
 	github.com/k0kubun/colorstring v0.0.0-20150214042306-9440f1994b88 // indirect
@@ -38,7 +39,7 @@ require (
 	go.etcd.io/etcd v3.3.20+incompatible // indirect
 	go.mongodb.org/mongo-driver v1.3.1
 	go.uber.org/zap v1.14.1 // indirect
-	golang.org/x/crypto v0.0.0-20191227163750-53104e6ec876
+	golang.org/x/crypto v0.0.0-20210220033148-5ea612d1eb83
 	golang.org/x/net v0.0.0-20200324143707-d3edc9973b7e
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
 	golang.org/x/sys v0.0.0-20200331124033-c3d80250170d // indirect
