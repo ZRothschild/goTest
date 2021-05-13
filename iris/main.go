@@ -4,20 +4,20 @@ import (
 	"encoding/xml"
 	"fmt"
 	"strings"
-	// "github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12"
 )
 
 func main() {
-	// app := iris.Default()
-	//
-	//
-	// app.Get("/ping", func(ctx iris.Context) {
-	// 	_, _ = ctx.JSON(iris.Map{
-	// 		"message": "pong",
-	// 	})
-	// })
-	// // listen and serve on http://0.0.0.0:8080.
-	// _ = app.Run(iris.Addr(":8080"))
+	app := iris.Default()
+
+
+	app.Get("/ping", func(ctx iris.Context) {
+		_, _ = ctx.JSON(iris.Map{
+			"message": "pong",
+		})
+	})
+	// listen and serve on http://0.0.0.0:8080.
+	_ = app.Run(iris.Addr(":8080"))
 
 	root := Root{Id: 33, Name: "name", Age: 10}
 	bXml, err := xml.Marshal(root)

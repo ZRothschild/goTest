@@ -1,0 +1,11 @@
+syntax = "proto3";
+package your.service.v1;
+option go_package = "github.com/yourorg/yourprotos/gen/go/your/service/v1";
+
+message StringMessage {
+    string value = 1;
+}
+
+service YourService {
+    rpc Echo(StringMessage) returns (StringMessage) {}
+}

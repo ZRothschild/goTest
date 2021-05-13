@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
-
+	// "github.com/elastic"
 	"github.com/elastic/go-elasticsearch/v7"
 	"github.com/elastic/go-elasticsearch/v7/esapi"
 )
@@ -75,6 +75,7 @@ func main() {
 				Body:       strings.NewReader(b.String()),
 				Refresh:    "true",
 			}
+			esapi.IndicesExists()
 
 			// Perform the request with the client.
 			res, err := req.Do(context.Background(), es)
@@ -124,6 +125,9 @@ func main() {
 		es.Search.WithTrackTotalHits(true),
 		es.Search.WithPretty(),
 	)
+
+
+
 	if err != nil {
 		log.Fatalf("Error getting response: %s", err)
 	}
@@ -158,4 +162,5 @@ func main() {
 		log.Printf(" * ID=%s, %s", hit.(map[string]interface{})["_id"], hit.(map[string]interface{})["_source"])
 	}
 	log.Println(strings.Repeat("=", 37))
+
 }

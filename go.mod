@@ -8,6 +8,7 @@ require (
 	github.com/coreos/pkg v0.0.0-20180928190104-399ea9e2e55f // indirect
 	github.com/elastic/go-elasticsearch/v7 v7.6.0 // indirect
 	github.com/fasthttp-contrib/websocket v0.0.0-20160511215533-1f3b11f56072 // indirect
+	github.com/gin-gonic/gin v1.7.2-0.20210411162934-ee4de846a894 // indirect
 	github.com/globalsign/mgo v0.0.0-20181015135952-eeefdecb41b8
 	github.com/go-sql-driver/mysql v1.4.1
 	github.com/golang/protobuf v1.3.5 // indirect

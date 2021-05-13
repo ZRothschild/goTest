@@ -1,13 +1,13 @@
 syntax = "proto3"; //语法声明
 
-//option go_package = ".;testGrpc";
-option go_package = "/helloworld";
+//option go_package = ".;testGrpc"; // 当前包
+option go_package = ".;helloworld";
 
 // Greeter 微服务
 service Greeter {
+
     // Sends a greeting
-    rpc SayHello (HelloRequest) returns (HelloReply) {
-    }
+    rpc SayHello (HelloRequest) returns (HelloReply) {}
 }
 
 // HelloRequest 请求数据格式
