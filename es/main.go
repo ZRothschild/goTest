@@ -126,8 +126,6 @@ func main() {
 		es.Search.WithPretty(),
 	)
 
-
-
 	if err != nil {
 		log.Fatalf("Error getting response: %s", err)
 	}

@@ -3,13 +3,12 @@ package main
 import (
 	"encoding/xml"
 	"fmt"
-	"strings"
 	"github.com/kataras/iris/v12"
+	"strings"
 )
 
 func main() {
 	app := iris.Default()
-
 
 	app.Get("/ping", func(ctx iris.Context) {
 		_, _ = ctx.JSON(iris.Map{
