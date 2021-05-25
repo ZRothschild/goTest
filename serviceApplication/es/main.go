@@ -41,7 +41,7 @@ func main() {
 
 	defer res.Body.Close()
 
-	es.Perform(res)
+	//es.Perform(res)
 
 	// Check response status
 	if res.IsError() {
@@ -75,7 +75,6 @@ func main() {
 				Body:       strings.NewReader(b.String()),
 				Refresh:    "true",
 			}
-			esapi.IndicesExists()
 
 			// Perform the request with the client.
 			res, err := req.Do(context.Background(), es)
