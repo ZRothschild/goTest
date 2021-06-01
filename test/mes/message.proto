@@ -13,7 +13,7 @@ service Waiter {
   // 方法 (请求消息结构体) returns (返回消息结构体) {}
   rpc Echo(Req) returns (Res) {
     option (google.api.http) = {
-      post: "/v1/example/echo"
+      post: "/v1/example/echo/{name}"
       body: "*"
     };
   }

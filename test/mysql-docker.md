@@ -49,3 +49,6 @@ flush privileges;
 grant all privileges on *.* to root@'%' identified by  'root';
 退出mysql
 quit;
+
+
+docker run --name grpc-micro  -d 
