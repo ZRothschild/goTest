@@ -83,6 +83,7 @@ func main() {
 	tracerServer, closerServer = TraceInit("Trace-Server", "const", 1)
 	defer closerServer.Close()
 
+
 	http.HandleFunc("/getList", GetListProc)
 
 	go http.ListenAndServe(":9909", nil)
