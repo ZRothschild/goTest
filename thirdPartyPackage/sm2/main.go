@@ -3,141 +3,147 @@ package main
 import (
 	"crypto/rand"
 	"encoding/base64"
-	"encoding/pem"
 	"fmt"
-	"github.com/guanzhi/GmSSL/go/gmssl"
-	"github.com/tjfoc/gmsm/pkcs12"
+	gmSm2 "github.com/ZZMarquis/gm/sm2"
 	"github.com/tjfoc/gmsm/sm2"
 	"github.com/tjfoc/gmsm/x509"
 	"io/ioutil"
-	//"github.com/tjfoc/gmsm/x509"
+	"math/big"
 )
 
 var (
-	pubKeyStr  = "AqH8MHA4c7yoZH+X+e8lqZlibkL4Ti9jMary93p8f69f"
+	pubKeyStr  = "AqH8MHA4c7yoZH+X+e8lqZlibkL4Ti9jMary93p8f69f" // 压缩后的公钥 使用 Compress函数
+	           // AqH8MHA4c7yoZH+X+e8lqZlibkL4Ti9jMary93p8f69f
 	privKeyStr = "oBpT5FgdQXhIRJgBqY6jWcFZ1Ptd35sSOrwieHLdIg8="
-	msgStr     = "helloworld"
-	// base64.StdEncoding.EncodeToString(sign)
-	signStr = "DIk02bFoZJLbR5EgLX5ZULRF78aP0EYYAKbDjmV8PeNwG4EEkcbRdiw4BpIIyKGpID4lFv0u26+KfgDeEfN/MQ=="
+	msgStr     = []byte("123456")
+	signStr    = "asy5gEjCBFm9wE2fBH52FZRGiGz96NwI+pzDVoYwzPOtcT4r1g4Lokoi/E+scWZFKx2xvVworQ501krdMfXtxA=="
+	           // 21qmC0cXSP2MqKYRHVppyb5F9aX8G9MGNx86c7p5YVK8BUcnuFG2N2zLNynd6hocINoeDSWX8YtMNFLrPixgkA
+	           // MEUCIQC9R5QRlcVT+qtEEdU832Enh/KnvEByTyTvyz9ixUDwIQIgCFNNvTQA8jPstE/bOib6j1CJ37T5KBITjRjphCyG3K4=
+	//ofwwcDhzvKhkf5f57yWpmWJuQvhOL2MxqvL3enx/r18
+	//JX1mA421012QTzENrOtFAUmT3HXs8rXWj8j7XUeMTR4=
+
+	//kZ7l1IZcprHfonuD7rxi4pBRl6Gk78zpLDI8MpGEIHc=
+	//u9ClNyPYWtp8GQmBRQaB35QHlXwQ0+JBFdHEOINlobQ=
+
+	// kZ7l1IZcprHfonuD7rxi4pBRl6Gk78zpLDI8MpGEIHc=
+	// u9ClNyPYWtp8GQmBRQaB35QHlXwQ0+JBFdHEOINlobQ=
+	//privKeyStr = "9WlS9KsxCZMbCeztUKgELgO3d4V/jqJGZvV94gDBKFc="
+
 )
 
 func main() {
-	/* Engines */
-	fmt.Print("Engines:")
-	engines := gmssl.GetEngineNames()
-	for _, engine := range engines {
-		fmt.Print(" " + engine)
-	}
-	fmt.Println("\n");
-
-	/* private key */
-	rsa_args := [][2]string{
-		{"rsa_keygen_bits", "2048"},
-		{"rsa_keygen_pubexp", "65537"},
-	}
-
-	rsa, err := gmssl.GeneratePrivateKey("RSA", rsa_args, nil)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	rsa_pem, err := rsa.GetPublicKeyPEM()
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(rsa_pem)
-
-	/* Engine */
-	eng, _ := gmssl.NewEngineByName(engines[1])
-	cmds, _ := eng.GetCommands()
-	for _, cmd := range cmds {
-		fmt.Print(" " + cmd)
-	}
-	fmt.Println()
-
-	/* SM2 key pair operations */
-	sm2keygenargs := [][2]string{
-		{"ec_paramgen_curve", "sm2p256v1"},
-		{"ec_param_enc", "named_curve"},
-	}
-	sm2sk, _ := gmssl.GeneratePrivateKey("EC", sm2keygenargs, nil)
-	sm2sktxt, _ := sm2sk.GetText()
-	sm2skpem, _ := sm2sk.GetPEM("SMS4", "password")
-	sm2pkpem, _ := sm2sk.GetPublicKeyPEM()
-
-	fmt.Println(sm2sktxt)
-	fmt.Println(sm2skpem)
-	fmt.Println(sm2pkpem)
-
-	sm2pk, _ := gmssl.NewPublicKeyFromPEM(sm2pkpem)
-	sm2pktxt, _ := sm2pk.GetText()
-	sm2pkpem_, _ := sm2pk.GetPEM()
-
-	fmt.Println(sm2pktxt)
-	fmt.Println(sm2pkpem_)
-
-	/* SM2 sign/verification */
-	sm3ctx, _ := gmssl.NewDigestContext("SM3")
-	sm2zid, _ := sm2pk.ComputeSM2IDDigest("1234567812345678")
-	sm3ctx.Reset()
-	sm3ctx.Update(sm2zid)
-	sm3ctx.Update([]byte("message"))
-	tbs, _ := sm3ctx.Final()
-
-	sig, _ := sm2sk.Sign("sm2sign", tbs, nil)
-	fmt.Printf("sm2sign(sm3(\"message\")) = %x\n", sig)
-
-	if ret := sm2pk.Verify("sm2sign", tbs, sig, nil); ret != nil {
-		fmt.Printf("sm2 verify failure\n")
-	} else {
-		fmt.Printf("sm2 verify success\n")
-	}
-
-	/* SM2 encrypt */
-	sm2msg := "01234567891123456789212345678931234567894123456789512345678961234567897123"
-	sm2encalg := "sm2encrypt-with-sm3"
-	sm2ciphertext, _ := sm2pk.Encrypt(sm2encalg, []byte(sm2msg), nil)
-	sm2plaintext, _ := sm2sk.Decrypt(sm2encalg, sm2ciphertext, nil)
-	fmt.Printf("sm2enc(\"%s\") = %x\n", sm2plaintext, sm2ciphertext)
-	if sm2msg != string(sm2plaintext) {
-		fmt.Println("SM2 encryption/decryption failure")
-	}
-
-
-	cc ,err := ioutil.ReadFile("./pri.pem")
-	fmt.Println(err,cc)
-
-	sm2sk, err = gmssl.NewPrivateKeyFromPEM(string(cc), "")
-
-	fmt.Println(sm2sk,err)
-
-	p , _ := pem.Decode(cc)
-	fmt.Println(len(p.Bytes))
-
-	pk ,err := x509.ParseSm2PrivateKey(p.Bytes)
-	fmt.Println(err,pk)
-
 	id := []byte("1234567812345678")
-	privKeyB, err := base64.StdEncoding.DecodeString(privKeyStr)
-	if err != nil {
-		fmt.Println(err)
-	}
+	p, pub, err := gmSm2.GenerateKey(rand.Reader)
+	fmt.Printf("p => %#v pub => %#v  err => %v \n", p, pub, err)
+
+	bt := p.GetRawBytes()
+	str := base64.StdEncoding.EncodeToString(bt)
+	strRaw := base64.StdEncoding.EncodeToString(p.D.Bytes())
+	fmt.Printf("p.D => %v   str => %v  strRaw => %v\n", p.D, str, strRaw)
+
+	fmt.Printf("pub.Y => %v   pub.X => %v\n", pub.Y, pub.X)
+
+	pubX := base64.StdEncoding.EncodeToString(pub.X.Bytes())
+	pubY := base64.StdEncoding.EncodeToString(pub.Y.Bytes())
+	fmt.Printf("pubX => %v pubY => %v \n", pubX, pubY)
+
+	btc := pub.GetUnCompressBytes()
+	str = base64.StdEncoding.EncodeToString(btc)
+
+	btc = pub.GetRawBytes()
+	strRaw = base64.StdEncoding.EncodeToString(btc)
+	fmt.Printf("pub GetUnCompressBytes => %v  GetRawBytes => %v\n", str, strRaw)
+
+	fmt.Println("====================================================================")
+
+	bt, err = base64.StdEncoding.DecodeString(privKeyStr)
+	fmt.Println(bt, err)
+	p, err = gmSm2.RawBytesToPrivateKey(bt)
+	fmt.Println(bt, err)
+
+	//  加签 start
+	r,s, err := gmSm2.SignToRS(p, id, msgStr)
+
+	str = base64.StdEncoding.EncodeToString(r.Bytes())
+
+	strRaw = base64.StdEncoding.EncodeToString(s.Bytes())
+	fmt.Printf("r. => %v s. => %v\n",str,strRaw)
+
+	bt, err = gmSm2.Sign(p, id, msgStr)
+	str = base64.StdEncoding.EncodeToString(bt)
+	fmt.Println(str, err)
+
+	// 加签 end
+
+	// r. => eBuXV1F8oYwuYnuEQHotPgus4ZzWCNYLvfNbRNdNU+k= s. => BFsIyzizeAwYyHYxA7CLp3qe+IPoWkugAnQQ7vBgC/4=
+	// MEYCIQDYNpbwCh3zI00SnOo99TYU0IasGxccO+oDwjHs8cdYPQIhAJqXNTZQhqKv/vP7oRdHmisxIRycuXHmVykkrwGTVE47
+
+	bt, err = base64.StdEncoding.DecodeString(signStr)
+	fmt.Println(bt, err)
+	r, s, err = gmSm2.UnmarshalSign(bt)
+	fmt.Println(r, s, err)
+
+	pub = gmSm2.CalculatePubKey(p)
+
+	bt = Compress(pub)
+	str = base64.StdEncoding.EncodeToString(bt)
+
+	pubX = base64.StdEncoding.EncodeToString(pub.X.Bytes())
+	pubY = base64.StdEncoding.EncodeToString(pub.Y.Bytes())
+	fmt.Printf("Compress pub => %v pubX => %v pubY => %v \n", str, pubX, pubY)
+
+	bt, err = base64.StdEncoding.DecodeString(pubKeyStr)
+	fmt.Println(bt, err)
+
+	fmt.Println("***************************************************************")
+
+	cc, err := ioutil.ReadFile("./pri1.pem")
+	pk, err := x509.ReadPrivateKeyFromPem(cc, nil)
+	fmt.Println(cc, err, pk)
 
 	aa, err := sm2.GenerateKey(rand.Reader)
 	fmt.Println(err)
 
-	bt, err := x509.WritePrivateKeyToPem(aa, nil)
+	a, err := x509.MarshalSm2UnecryptedPrivateKey(aa)
+	fmt.Println(a, err, base64.StdEncoding.EncodeToString(a))
+
+	strB := base64.StdEncoding.EncodeToString(aa.PublicKey.X.Bytes())
+	fmt.Println(strB)
+
+	strB = base64.StdEncoding.EncodeToString(aa.PublicKey.Y.Bytes())
+	fmt.Println(strB)
+
+	strA := base64.StdEncoding.EncodeToString(aa.D.Bytes())
+	fmt.Println(strA)
+
+	bt = sm2.Compress(&aa.PublicKey)
+	str = base64.StdEncoding.EncodeToString(bt)
+	fmt.Println(str)
+
+	bt, err = x509.WritePrivateKeyToPem(aa, nil)
 	fmt.Println(err)
 
 	err = ioutil.WriteFile("pri1.pem", bt, 0666)
 	fmt.Println(err)
 
-	pric, err := pkcs12.ParsePKCS8PrivateKey(privKeyB)
-	if err != nil {
-		fmt.Println(err, pric)
-	}
-	r, s, err := sm2.Sm2Sign(nil, []byte(msgStr), id, rand.Reader)
+	//privKeyB, err := base64.StdEncoding.DecodeString(privKeyStr)
+	//if err != nil {
+	//	fmt.Println(err)
+	//}
+
+	//pri := &sm2.PrivateKey{
+	//	PublicKey: sm2.PublicKey{
+	//		Curve: sm2.P256Sm2(),
+	//	},
+	//	D: new(big.Int).SetBytes(privKeyB),
+	//}
+	//
+	//pric, err := pkcs12.MarshalECPrivateKey(pri)
+	//if err != nil {
+	//	fmt.Println(err, pric)
+	//}
+
+	r, s, err = sm2.Sm2Sign(nil, msgStr, id, rand.Reader)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -145,6 +151,35 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	str := base64.StdEncoding.EncodeToString(data)
+	str = base64.StdEncoding.EncodeToString(data)
 	fmt.Println(str)
+}
+
+func Compress(a *gmSm2.PublicKey) []byte {
+	buf := []byte{}
+	yp := getLastBit(a.Y)
+	buf = append(buf, a.X.Bytes()...)
+	if n := len(a.X.Bytes()); n < 32 {
+		buf = append(zeroByteSlice()[:(32-n)], buf...)
+	}
+	buf = append([]byte{byte(yp + 2)}, buf...)
+	return buf
+}
+
+func getLastBit(a *big.Int) uint {
+	return a.Bit(0)
+}
+
+// 32byte
+func zeroByteSlice() []byte {
+	return []byte{
+		0, 0, 0, 0,
+		0, 0, 0, 0,
+		0, 0, 0, 0,
+		0, 0, 0, 0,
+		0, 0, 0, 0,
+		0, 0, 0, 0,
+		0, 0, 0, 0,
+		0, 0, 0, 0,
+	}
 }
