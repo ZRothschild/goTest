@@ -4,7 +4,7 @@ go 1.16
 
 replace github.com/coreos/bbolt v1.3.6 => go.etcd.io/bbolt v1.3.6
 
-replace google.golang.org/grpc v1.38.0 => google.golang.org/grpc v1.26.0
+//replace google.golang.org/grpc v1.38.0 => google.golang.org/grpc v1.26.0
 
 require (
 	github.com/HdrHistogram/hdrhistogram-go v1.1.0 // indirect
