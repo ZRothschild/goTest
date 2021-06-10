@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/iGoogle-ink/gopay"
+	//"github.com/iGoogle-ink/gopay"
 	"reflect"
 )
 

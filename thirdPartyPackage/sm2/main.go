@@ -1,12 +1,15 @@
 package main
 
 import (
+	"bytes"
 	"crypto/rand"
 	"encoding/base64"
 	"fmt"
 	gmSm2 "github.com/ZZMarquis/gm/sm2"
 	"github.com/tjfoc/gmsm/sm2"
 	"github.com/tjfoc/gmsm/x509"
+	"golang.org/x/text/encoding/simplifiedchinese"
+	"golang.org/x/text/transform"
 	"io/ioutil"
 	"math/big"
 )
@@ -31,7 +34,24 @@ var (
 
 )
 
+// 	bjt := []byte{213,212,199,197,205,250}
+//	aacc, errjj := GbkToUtf8(bjt)
+//	fmt.Println(aacc,errjj,string(aacc))
+// GbkToUtf8 transform GBK bytes to UTF-8 bytes
+func GbkToUtf8(bt []byte) ( []byte, error) {
+	r := transform.NewReader(bytes.NewReader(bt), simplifiedchinese.GBK.NewDecoder())
+	return ioutil.ReadAll(r)
+}
+
+// Utf8ToGbk transform UTF-8 bytes to GBK bytes
+func Utf8ToGbk(bt []byte) (b []byte, err error) {
+	r := transform.NewReader(bytes.NewReader(bt), simplifiedchinese.GBK.NewEncoder())
+	return  ioutil.ReadAll(r)
+}
+
+
 func main() {
+
 	id := []byte("1234567812345678")
 	p, pub, err := gmSm2.GenerateKey(rand.Reader)
 	fmt.Printf("p => %#v pub => %#v  err => %v \n", p, pub, err)
