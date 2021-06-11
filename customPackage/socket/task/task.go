@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/ZRothschild/goTest/socket/config"
+	"customPackage/socket/config"
 	"github.com/streadway/amqp"
 	"log"
 )

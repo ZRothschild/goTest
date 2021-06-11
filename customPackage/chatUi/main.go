@@ -1,24 +1,15 @@
 package main
 
 import (
+	lib2 "customPackage/chatUi/lib"
+	"customPackage/socket/config"
 	"encoding/json"
-	lib2 "github.com/ZRothschild/goTest/customPackage/chatUi/lib"
-	"github.com/ZRothschild/goTest/socket/config"
 	socketio "github.com/googollee/go-socket.io"
 	"log"
 	"math/rand"
 	"net/http"
 	"os"
 	"time"
-	// "encoding/json"
-	// "github.com/ZRothschild/goTest/chatUi/lib"
-	// "github.com/ZRothschild/goTest/socket/config"
-	// socketio "github.com/googollee/go-socket.io"
-	// "github.com/streadway/amqp"
-	// "go.mongodb.org/mongo-driver/bson"
-	// "go.mongodb.org/mongo-driver/mongo"
-	// "time"
-	// "context"
 )
 
 var (
@@ -57,8 +48,7 @@ func main() {
 	hand := http.StripPrefix("/", http.FileServer(http.Dir(path)))
 	serveMux.Handle("/", hand)
 
-	socketServer, err := socketio.NewServer(nil)
-	lib2.Log(err, "socketio.NewServer")
+	socketServer := socketio.NewServer(nil)
 
 	defer socketServer.Close()
 	// socket 链接

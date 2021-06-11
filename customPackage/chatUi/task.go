@@ -2,8 +2,8 @@ package main
 
 import (
 	"encoding/json"
-	lib2 "github.com/ZRothschild/goTest/customPackage/chatUi/lib"
-	"github.com/ZRothschild/goTest/socket/config"
+	lib2 "customPackage/chatUi/lib"
+	"customPackage/socket/config"
 	"github.com/jinzhu/gorm"
 	"github.com/streadway/amqp"
 	"log"

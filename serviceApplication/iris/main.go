@@ -32,9 +32,9 @@ func main() {
 	fmt.Printf("%#v\n", tk)
 
 	start := xml.StartElement{Name: xml.Name{Local: "test"}}
-	a, err := xml.NewEncoder()
-
-	fmt.Printf("%#v\n", string(a))
+	//a, err := xml.NewEncoder(nil)
+	//
+	//fmt.Printf("%#v\n", string(a))
 	fmt.Printf("%#v\n", start)
 }
 
