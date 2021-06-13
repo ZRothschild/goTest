@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/ZRothschild/goTest/socket/config"
+	"customPackage/socket/config"
 	socketio "github.com/googollee/go-socket.io"
 	"github.com/streadway/amqp"
 	"log"
@@ -9,8 +9,7 @@ import (
 )
 
 func main() {
-	server, err := socketio.NewServer(nil)
-	config.FailOnError(err, "socketio.NewServer")
+	server := socketio.NewServer(nil)
 
 	mongoDb, err := config.MongoClient()
 	config.FailOnError(err, "MongoClient")

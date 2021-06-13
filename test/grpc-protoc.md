@@ -18,4 +18,4 @@ protoc -I ./proto -I . --go_out=./pb --go_opt=paths=source_relative  --go-grpc_o
 
 protoc -I ./proto -I .   --go_out=plugins=grpc:./pb  --go_opt=paths=source_relative  common.proto doubleoffline.proto google/api/annotations.proto
 
-protoc -I ./proto -I . --go_out=./pb --go_opt=paths=source_relative  --go-grpc_out=./pb --go-grpc_opt=paths=source_relative --grpc-gateway_out=./pb  --grpc-gateway_opt generate_unbound_methods=true --grpc-gateway_opt paths=source_relative  doubleoffline.proto common.proto
+protoc -I ./proto -I . --go_out=./pb --go_opt=paths=source_relative  --go-grpc_out=./pb --go-grpc_opt=paths=source_relative --grpc-gateway_out=./pb  --grpc-gateway_opt generate_unbound_methods=true --grpc-gateway_opt paths=source_relative  doubleoffline.proto

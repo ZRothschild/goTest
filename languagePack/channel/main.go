@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"runtime"
 	"time"
 )
 
@@ -38,8 +39,10 @@ func main() {
 	signal.Notify(c, os.Interrupt, os.Kill)
 	fmt.Println("===")
 	testOne()
+	fmt.Println("=========出来了")
 	s := <-c
 	fmt.Println("Got signal:", s)
+	return
 	// s := S{Msg: make(chan string)}
 	// s.SetName()
 	// time.Sleep(4*time.Second)
@@ -117,7 +120,9 @@ func test() {
 	}()
 	// time.Sleep(time.Second)
 	// b <- true
+
 	fmt.Println("aaaaaa")
+	runtime.Goexit() //超时后退出该Go协程
 	return
 }
 
