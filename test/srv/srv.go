@@ -25,7 +25,10 @@ func main() {
 
 	//s := grpc.NewServer()
 	//mes.RegisterWaiterServer(s, &waiter.Waiter{})
-	mes.RegisterWaiterHandlerServer(context.Background(),mux,&waiter.Waiter{})
+	if err := mes.RegisterWaiterHandlerServer(context.Background(), mux, &waiter.Waiter{}); err != nil {
+		return
+	}
+
 	if err := http.ListenAndServe(
 		":5001",
 		mux,
