@@ -19,6 +19,7 @@ var (
 	           // AqH8MHA4c7yoZH+X+e8lqZlibkL4Ti9jMary93p8f69f
 	privKeyStr = "oBpT5FgdQXhIRJgBqY6jWcFZ1Ptd35sSOrwieHLdIg8="
 	msgStr     = []byte("123456")
+	// 阿里使用的是  r与s 拼接成一个byte 再base64 所以我们要先解码然后再以三十二位的位置切割成两份，r与s
 	signStr    = "asy5gEjCBFm9wE2fBH52FZRGiGz96NwI+pzDVoYwzPOtcT4r1g4Lokoi/E+scWZFKx2xvVworQ501krdMfXtxA=="
 	           // 21qmC0cXSP2MqKYRHVppyb5F9aX8G9MGNx86c7p5YVK8BUcnuFG2N2zLNynd6hocINoeDSWX8YtMNFLrPixgkA
 	           // MEUCIQC9R5QRlcVT+qtEEdU832Enh/KnvEByTyTvyz9ixUDwIQIgCFNNvTQA8jPstE/bOib6j1CJ37T5KBITjRjphCyG3K4=
@@ -51,7 +52,6 @@ func Utf8ToGbk(bt []byte) (b []byte, err error) {
 
 
 func main() {
-
 	id := []byte("1234567812345678")
 	p, pub, err := gmSm2.GenerateKey(rand.Reader)
 	fmt.Printf("p => %#v pub => %#v  err => %v \n", p, pub, err)
@@ -98,12 +98,32 @@ func main() {
 	// r. => eBuXV1F8oYwuYnuEQHotPgus4ZzWCNYLvfNbRNdNU+k= s. => BFsIyzizeAwYyHYxA7CLp3qe+IPoWkugAnQQ7vBgC/4=
 	// MEYCIQDYNpbwCh3zI00SnOo99TYU0IasGxccO+oDwjHs8cdYPQIhAJqXNTZQhqKv/vP7oRdHmisxIRycuXHmVykkrwGTVE47
 
+	// signStr = "MEQCIEoHKKnfevqzyOfzjo4CmccCjvDTC3+c2vN6OugjyLh7AiBW3kZkfBZlYDXDBwm0DwYsOFDj54nOIUyzHB+pB78WoQ=="
+
+	// 支付宝加密后的字段需要base64解压，然后再通过三十二位一份切割，成两份r,s。
+	// 而不是直接将加签得到的r,s直接 asn1.Marshal 编码
 	bt, err = base64.StdEncoding.DecodeString(signStr)
 	fmt.Println(bt, err)
-	r, s, err = gmSm2.UnmarshalSign(bt)
-	fmt.Println(r, s, err)
 
+	rBt :=  bt[:32]
+	sBt :=  bt[32:]
+	r = new(big.Int).SetBytes(rBt)
+	s = new(big.Int).SetBytes(sBt)
+
+	// r, s, err = gmSm2.UnmarshalSign(bt)
+	// fmt.Println(r, s, err)
+	// rStr := base64.StdEncoding.EncodeToString(r.Bytes())
+	// sStr := base64.StdEncoding.EncodeToString(s.Bytes())
+	//
+	// rBt := r.Bytes()
+	// rBt = append(rBt,s.Bytes()...)
+	// rBtStr := base64.StdEncoding.EncodeToString(rBt)
+	// fmt.Printf("rStr => %v sStr => %v rBtStr %v",rStr,sStr,rBtStr)
+	// rStr => Sgcoqd96+rPI5/OOjgKZxwKO8NMLf5za83o66CPIuHs= sStr => Vt5GZHwWZWA1wwcJtA8GLDhQ4+eJziFMsxwfqQe/FqE=
 	pub = gmSm2.CalculatePubKey(p)
+
+	b := gmSm2.VerifyByRS(pub, id, msgStr, r,s)
+	fmt.Println(b)
 
 	bt = Compress(pub)
 	str = base64.StdEncoding.EncodeToString(bt)

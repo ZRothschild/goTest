@@ -55,7 +55,7 @@ func GetListProc(w http.ResponseWriter, req *http.Request) {
 	fmt.Println(respString)
 	_, err := io.WriteString(w, respString)
 	if err != nil {
-		return 
+		return
 	}
 }
 
