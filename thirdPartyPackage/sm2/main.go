@@ -10,19 +10,21 @@ import (
 	"github.com/tjfoc/gmsm/x509"
 	"golang.org/x/text/encoding/simplifiedchinese"
 	"golang.org/x/text/transform"
+	"io/fs"
 	"io/ioutil"
 	"math/big"
 )
 
 var (
-	pubKeyStr  = "AqH8MHA4c7yoZH+X+e8lqZlibkL4Ti9jMary93p8f69f" // 压缩后的公钥 使用 Compress函数
-	           // AqH8MHA4c7yoZH+X+e8lqZlibkL4Ti9jMary93p8f69f
+	pubKeyStr = "AqH8MHA4c7yoZH+X+e8lqZlibkL4Ti9jMary93p8f69f" // 压缩后的公钥 使用 Compress函数
+	// AqH8MHA4c7yoZH+X+e8lqZlibkL4Ti9jMary
 	privKeyStr = "oBpT5FgdQXhIRJgBqY6jWcFZ1Ptd35sSOrwieHLdIg8="
 	msgStr     = []byte("123456")
 	// 阿里使用的是  r与s 拼接成一个byte 再base64 所以我们要先解码然后再以三十二位的位置切割成两份，r与s
-	signStr    = "asy5gEjCBFm9wE2fBH52FZRGiGz96NwI+pzDVoYwzPOtcT4r1g4Lokoi/E+scWZFKx2xvVworQ501krdMfXtxA=="
-	           // 21qmC0cXSP2MqKYRHVppyb5F9aX8G9MGNx86c7p5YVK8BUcnuFG2N2zLNynd6hocINoeDSWX8YtMNFLrPixgkA
-	           // MEUCIQC9R5QRlcVT+qtEEdU832Enh/KnvEByTyTvyz9ixUDwIQIgCFNNvTQA8jPstE/bOib6j1CJ37T5KBITjRjphCyG3K4=
+	signStr = "asy5gEjCBFm9wE2fBH52FZRGiGz96NwI+pzDVoYwzPOtcT4r1g4Lokoi/E+scWZFKx2xvVworQ501krdMfXtxA=="
+	// asy5gEjCBFm9wE2fBH52FZRGiGz96NwI+pzDVoYwzPOtcT4r1g4Lokoi/E+scWZFKx2xvVworQ501krdMfXtxA==
+	// 21qmC0cXSP2MqKYRHVppyb5F9aX8G9MGNx86c7p5YVK8BUcnuFG2N2zLNynd6hocINoeDSWX8YtMNFLrPixgkA
+	// MEUCIQC9R5QRlcVT+qtEEdU832Enh/KnvEByTyTvyz9ixUDwIQIgCFNNvTQA8jPstE/bOib6j1CJ37T5KBITjRjphCyG3K4=
 	//ofwwcDhzvKhkf5f57yWpmWJuQvhOL2MxqvL3enx/r18
 	//JX1mA421012QTzENrOtFAUmT3HXs8rXWj8j7XUeMTR4=
 
@@ -39,7 +41,7 @@ var (
 //	aacc, errjj := GbkToUtf8(bjt)
 //	fmt.Println(aacc,errjj,string(aacc))
 // GbkToUtf8 transform GBK bytes to UTF-8 bytes
-func GbkToUtf8(bt []byte) ( []byte, error) {
+func GbkToUtf8(bt []byte) ([]byte, error) {
 	r := transform.NewReader(bytes.NewReader(bt), simplifiedchinese.GBK.NewDecoder())
 	return ioutil.ReadAll(r)
 }
@@ -47,9 +49,8 @@ func GbkToUtf8(bt []byte) ( []byte, error) {
 // Utf8ToGbk transform UTF-8 bytes to GBK bytes
 func Utf8ToGbk(bt []byte) (b []byte, err error) {
 	r := transform.NewReader(bytes.NewReader(bt), simplifiedchinese.GBK.NewEncoder())
-	return  ioutil.ReadAll(r)
+	return ioutil.ReadAll(r)
 }
-
 
 func main() {
 	id := []byte("1234567812345678")
@@ -82,12 +83,12 @@ func main() {
 	fmt.Println(bt, err)
 
 	//  加签 start
-	r,s, err := gmSm2.SignToRS(p, id, msgStr)
+	r, s, err := gmSm2.SignToRS(p, id, msgStr)
 
 	str = base64.StdEncoding.EncodeToString(r.Bytes())
 
 	strRaw = base64.StdEncoding.EncodeToString(s.Bytes())
-	fmt.Printf("r. => %v s. => %v\n",str,strRaw)
+	fmt.Printf("r. => %v s. => %v\n", str, strRaw)
 
 	bt, err = gmSm2.Sign(p, id, msgStr)
 	str = base64.StdEncoding.EncodeToString(bt)
@@ -105,24 +106,23 @@ func main() {
 	bt, err = base64.StdEncoding.DecodeString(signStr)
 	fmt.Println(bt, err)
 
-	rBt :=  bt[:32]
-	sBt :=  bt[32:]
-	r = new(big.Int).SetBytes(rBt)
-	s = new(big.Int).SetBytes(sBt)
+	r = new(big.Int).SetBytes(bt[:32])
+	s = new(big.Int).SetBytes(bt[32:])
 
-	// r, s, err = gmSm2.UnmarshalSign(bt)
-	// fmt.Println(r, s, err)
-	// rStr := base64.StdEncoding.EncodeToString(r.Bytes())
-	// sStr := base64.StdEncoding.EncodeToString(s.Bytes())
-	//
-	// rBt := r.Bytes()
-	// rBt = append(rBt,s.Bytes()...)
-	// rBtStr := base64.StdEncoding.EncodeToString(rBt)
-	// fmt.Printf("rStr => %v sStr => %v rBtStr %v",rStr,sStr,rBtStr)
+	rBt := append(r.Bytes(), s.Bytes()...)
+	rBtStr := base64.StdEncoding.EncodeToString(rBt)
+	fmt.Println(rBtStr)
+
+	//r, s, err = gmSm2.UnmarshalSign(bt)
+	//fmt.Println(r, s, err)
+	//rStr := base64.StdEncoding.EncodeToString(r.Bytes())
+	//sStr := base64.StdEncoding.EncodeToString(s.Bytes())
+
+	//fmt.Printf("rStr => %v sStr => %v rBtStr %v",rStr,sStr,rBtStr)
 	// rStr => Sgcoqd96+rPI5/OOjgKZxwKO8NMLf5za83o66CPIuHs= sStr => Vt5GZHwWZWA1wwcJtA8GLDhQ4+eJziFMsxwfqQe/FqE=
 	pub = gmSm2.CalculatePubKey(p)
 
-	b := gmSm2.VerifyByRS(pub, id, msgStr, r,s)
+	b := gmSm2.VerifyByRS(pub, id, msgStr, r, s)
 	fmt.Println(b)
 
 	bt = Compress(pub)
@@ -222,4 +222,76 @@ func zeroByteSlice() []byte {
 		0, 0, 0, 0,
 		0, 0, 0, 0,
 	}
+}
+
+func GeneratePrivateKey(privKeyStr string) (err error) {
+	var (
+		bt         []byte
+		privateKey *sm2.PrivateKey
+	)
+	if bt, err = base64.StdEncoding.DecodeString(privKeyStr); err != nil {
+		return err
+	}
+	curve := sm2.P256Sm2()
+	privateKey = new(sm2.PrivateKey)
+	privateKey.PublicKey.Curve = curve
+	privateKey.D = new(big.Int).SetBytes(bt)
+	privateKey.PublicKey.X, privateKey.PublicKey.Y = curve.ScalarBaseMult(bt)
+	fmt.Println(privateKey.PublicKey.X, privateKey.PublicKey.Y)
+	if bt, err = x509.WritePrivateKeyToPem(privateKey, nil); err != nil {
+		return err
+	}
+	// 私钥写入文件
+	if err = ioutil.WriteFile("./privateKey.pem", bt, fs.FileMode(0644)); err != nil {
+		return err
+	}
+	buf := []byte{}
+	yp := getLastBit(privateKey.PublicKey.Y)
+	buf = append(buf, privateKey.PublicKey.X.Bytes()...)
+	if n := len(privateKey.PublicKey.X.Bytes()); n < 32 {
+		buf = append(zeroByteSlice()[:(32-n)], buf...)
+	}
+	buf = append([]byte{byte(yp + 2)}, buf...)
+	str := base64.StdEncoding.EncodeToString(buf)
+	fmt.Println(str)
+	// 私钥写入文件
+	if bt, err = x509.WritePublicKeyToPem(&privateKey.PublicKey); err != nil {
+		return err
+	}
+	// 私钥写入文件
+	if err = ioutil.WriteFile("./publicKey.pem", bt, fs.FileMode(0644)); err != nil {
+		return err
+	}
+	return err
+}
+
+// Sm2Sign 私钥签名
+func Sm2Sign(msg, uid []byte) (r, s *big.Int, err error) {
+	var (
+		bt  []byte
+		pri *sm2.PrivateKey
+	)
+	if bt, err = ioutil.ReadFile("./privateKey.pem"); err != nil {
+		return r, s, err
+	}
+	if pri, err = x509.ReadPrivateKeyFromPem(bt, nil); err != nil {
+		return r, s, err
+	}
+	return sm2.Sm2Sign(pri, msg, uid, rand.Reader)
+}
+
+// Sm2Verify 公钥验签
+func Sm2Verify(msg, uid []byte, r, s *big.Int) (b bool, err error) {
+	var (
+		bt  []byte
+		pub *sm2.PublicKey
+	)
+	if bt, err = ioutil.ReadFile("./publicKey.pem"); err != nil {
+		return b, err
+	}
+	if pub, err = x509.ReadPublicKeyFromPem(bt); err != nil {
+		return b, err
+	}
+	b = sm2.Sm2Verify(pub, msg, uid, r, s)
+	return b, err
 }

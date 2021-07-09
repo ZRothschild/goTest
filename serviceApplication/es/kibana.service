@@ -1,0 +1,12 @@
+[Unit]
+Description=kibana
+[Service]
+User=zr
+LimitNOFILE=100000
+LimitNPROC=100000
+ExecStart=/usr/local/soft/kibana-7.13.2-linux-x86_64/bin/kibana
+Restart=on-failure
+[Install]
+WantedBy=multi-user.target
+
+

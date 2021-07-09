@@ -1,0 +1,12 @@
+[Unit]
+Description=elasticsearch
+[Service]
+User=zr
+LimitNOFILE=100000
+LimitNPROC=100000
+ExecStart=/usr/local/soft/elasticsearch-7.13.2/bin/elasticsearch
+Restart=on-failure
+[Install]
+WantedBy=multi-user.target
+
+

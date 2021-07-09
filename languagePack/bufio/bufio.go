@@ -1,9 +1,12 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"reflect"
 	"runtime"
+	"strings"
+	"sync"
 	"time"
 )
 
@@ -75,58 +78,56 @@ func bar(a, b string) string {
 }
 
 func main() {
-	mybar := bar
-	err := Decorator(&mybar, bar)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(mybar("hello,", "world!"))
+	//mybar := bar
+	//err := Decorator(&mybar, bar)
+	//if err != nil {
+	//	panic(err)
+	//}
+	//fmt.Println(mybar("hello,", "world!"))
 
 	// sum1 := timedSumFunc(Sum1)
 	// sum2 := timedSumFunc(Sum2)
 	// fmt.Printf("%d, %d\n", sum1(1, 10000000), sum2(1, 10000000))
 
-	// s := strings.NewReader("hello world")
-	// var b = make([]byte,s.Len())
-	// s.Read(b)
-	// fmt.Println(string(b))
-	// var btA = []string{"ni","是","jia"}
-	// var btB = make([]string,5)
-	// copy(btB,btA)
-	// btA = []string{"nin","jia"}
-	// copy(btB,btA)
-	// fmt.Println(btB)
-	// s.Reset("你好ya")
-	// bt , _,_ := s.ReadRune()
-	// fmt.Println(string(bt))
-	// bt , _,_ = s.ReadRune()
-	// fmt.Println(string(bt))
-	// bufS := bufio.NewReader(s)
-	// ss, err := bufS.ReadBytes('y')
-	// fmt.Println(string(ss),err)
-	//
-	// copy(b,"aaa")
+	s := strings.NewReader("hello world")
+	var b = make([]byte,s.Len())
+	s.Read(b)
+	fmt.Println(string(b))
+	var btA = []string{"ni","是","jia"}
+	var btB = make([]string,5)
+	copy(btB,btA)
+	btA = []string{"nin","jia"}
+	copy(btB,btA)
+	fmt.Println(btB)
+	s.Reset("你好ya")
+	bt , _,_ := s.ReadRune()
+	fmt.Println(string(bt))
+	bt , _,_ = s.ReadRune()
+	fmt.Println(string(bt))
+	bufS := bufio.NewReader(s)
+	ss, err := bufS.ReadBytes('y')
+	fmt.Println(bufS.ReadString('a'))
+	fmt.Println(string(ss),err)
 
-	// r:= io.NewSectionReader(reader, 1, 4)
+	copy(b,"aaa")
 
-	// bufS.WriteTo(s)
+	//r:= io.NewSectionReader(reader, 1, 4)
+	//bufS.WriteTo(s)
 
-	// var te = []string{"tes","name"}
-	//
-	// Slice(te)
-	//
-	// fmt.Println(te)
+	var te = []string{"tes","name"}
+	Slice(te)
+	fmt.Println(te)
 
-	// p:=&sync.Pool{
-	// 	New: func() interface{}{
-	// 		return 0
-	// 	},
-	// }
-	// p.Put("jiangzhou")
-	// p.Put(123456)
-	// fmt.Println(p.Get())
-	// fmt.Println(p.Get())
-	// fmt.Println(p.Get())
+	p:=&sync.Pool{
+		New: func() interface{}{
+			return 0
+		},
+	}
+	p.Put("jiangzhou")
+	p.Put(123456)
+	fmt.Println(p.Get())
+	fmt.Println(p.Get())
+	fmt.Println(p.Get())
 
 }
 
