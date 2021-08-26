@@ -29,13 +29,13 @@ import (
 	"net"
 	"strings"
 
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/examples/data"
+	pb "google.golang.org/grpc/examples/features/proto/echo"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
-
-	pb "google.golang.org/grpc/examples/features/proto/echo"
 )
 
 var (
