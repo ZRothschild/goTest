@@ -12,3 +12,4 @@ protoc --go_out=./name  --go_opt=paths=source_relative mes/message.proto
 
 
 protoc --go_out=. --go_opt=paths=import mes/message.proto
+

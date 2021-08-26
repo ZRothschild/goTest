@@ -2,7 +2,7 @@
 ```shell
 Docker 启动mysql
 # 主
-docker run -p 3307:3306  --restart=always  --privileged=true --name mysql -v D:\dockerData\mysql\data:/var/lib/mysql -v D:\dockerData\mysql\my.cnf/my.cnf:/etc/mysql/my.cnf -e MYSQL_ROOT_PASSWORD="123456" -d mysql:5.7
+docker run -p 3307:3306  --restart=always  --privileged=true --name allerganMysql -v D:\docker\mysql\data:/var/lib/mysql -v D:\docker\mysql\my.cnf:/etc/mysql/my.cnf -e MYSQL_ROOT_PASSWORD="123456" -d mysql:5.7
 # 从
 docker run -p 3308:3306  --restart=always  --privileged=true --name mysql2 -v D:\dockerData\mysql2\data:/var/lib/mysql -v D:\dockerData\mysql2\conf\my.cnf:/etc/mysql/my.cnf -e MYSQL_ROOT_PASSWORD="123456" -d mysql:5.7
 
@@ -169,3 +169,4 @@ default-character-set=utf8
 
 ```
 
+[,{"deptId":"327","devicePrivateKey":"xmYU/SztXZJnaegO+r3sOBsxgZcdUbwktBH88SG9/Ic=","devicePublicKey":"A0Mv191e29bnmZGtyzKenewssqvgiQ+1zHHS9y1Gjam7","headKey":"AAAAHAYBAQEhA0Mv191e29bnmZGtyzKenewssqvgiQ+1zHHS9y1Gjam7QH+sXIj2/4TICMWZvWOIauiSUa5GBDcDo7aG2mHLnEZ7b+T1oB7IhtSsYh917HNufal3onXAgMYQvs/RXhAKJGQ=","id":10012,"pId":"2088141086130903","tradeCode":"XF438463"},{"deptId":"327","devicePrivateKey":"xmYU/SztXZJnaegO+r3sOBsxgZcdUbwktBH88SG9/Ic=","devicePublicKey":"A0Mv191e29bnmZGtyzKenewssqvgiQ+1zHHS9y1Gjam7","headKey":"AAAAHAYBAQEhA0Mv191e29bnmZGtyzKenewssqvgiQ+1zHHS9y1Gjam7QH+sXIj2/4TICMWZvWOIauiSUa5GBDcDo7aG2mHLnEZ7b+T1oB7IhtSsYh917HNufal3onXAgMYQvs/RXhAKJGQ=","id":10013,"pId":"2088141086130903","tradeCode":"XF855422"},{"deptId":"327","devicePrivateKey":"xmYU/SztXZJnaegO+r3sOBsxgZcdUbwktBH88SG9/Ic=","devicePublicKey":"A0Mv191e29bnmZGtyzKenewssqvgiQ+1zHHS9y1Gjam7","headKey":"AAAAHAYBAQEhA0Mv191e29bnmZGtyzKenewssqvgiQ+1zHHS9y1Gjam7QH+sXIj2/4TICMWZvWOIauiSUa5GBDcDo7aG2mHLnEZ7b+T1oB7IhtSsYh917HNufal3onXAgMYQvs/RXhAKJGQ=","id":10014,"pId":"2088141086130903","tradeCode":"XF151784"},{"deptId":"327","devicePrivateKey":"xmYU/SztXZJnaegO+r3sOBsxgZcdUbwktBH88SG9/Ic=","devicePublicKey":"A0Mv191e29bnmZGtyzKenewssqvgiQ+1zHHS9y1Gjam7","headKey":"AAAAHAYBAQEhA0Mv191e29bnmZGtyzKenewssqvgiQ+1zHHS9y1Gjam7QH+sXIj2/4TICMWZvWOIauiSUa5GBDcDo7aG2mHLnEZ7b+T1oB7IhtSsYh917HNufal3onXAgMYQvs/RXhAKJGQ=","id":10015,"pId":"2088141086130903","tradeCode":"XF052901"}]
