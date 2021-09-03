@@ -26,6 +26,7 @@ import (
 	"log"
 	"time"
 
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	pb "google.golang.org/grpc/examples/features/proto/echo"
 	"google.golang.org/grpc/status"

@@ -66,3 +66,66 @@ func main() {
 
 
 }
+
+--logtostderr=false \
+--v=2 \
+--log-dir=/opt/kubernetes/logs \
+--etcd-servers=https://192.168.11.128:2379,https://192.168.11.129:2379,https://192.168.11.130:2379 \
+--bind-address=0.0.0.0 \
+--secure-port=6443 \
+--advertise-address=192.168.11.128 \
+--allow-privileged=true \
+--service-cluster-ip-range=10.0.0.0/24 \
+--enable-admission-plugins=NamespaceLifecycle,LimitRanger,ServiceAccount,ResourceQuota,NodeRestriction \
+--authorization-mode=RBAC,Node \
+--enable-bootstrap-token-auth=true \
+--token-auth-file=/opt/kubernetes/cfg/token.csv \
+--service-node-port-range=30000-32767 \
+--kubelet-certificate-authority=/opt/kubernetes/ssl/ca.pem \
+--kubelet-client-certificate=/opt/kubernetes/ssl/server.pem \
+--kubelet-client-key=/opt/kubernetes/ssl/server-key.pem \
+--tls-cert-file=/opt/kubernetes/ssl/server.pem  \
+--tls-private-key-file=/opt/kubernetes/ssl/server-key.pem \
+--client-ca-file=/opt/kubernetes/ssl/ca.pem \
+--service-account-key-file=/opt/kubernetes/ssl/ca.pem \
+--service-account-signing-key-file=/opt/kubernetes/ssl/ca-key.pem \
+--service-account-issuer=https://kubernetes.default.svc.cluster.local \
+--etcd-cafile=/opt/etcd/ssl/ca.pem \
+--etcd-certfile=/opt/etcd/ssl/server.pem \
+--etcd-keyfile=/opt/etcd/ssl/server-key.pem \
+--audit-log-maxage=30 \
+--audit-log-maxbackup=3 \
+--audit-log-maxsize=100 \
+--audit-log-path=/opt/kubernetes/logs/k8s-audit.log
+
+
+
+--logtostderr=false \
+--v=2 \
+--log-dir=/opt/kubernetes/logs \
+--leader-elect=true \
+--master=https://192.168.11.128:6443 \
+--bind-address=127.0.0.1 \
+--allocate-node-cidrs=true \
+--cluster-cidr=10.244.0.0/16 \
+--client-ca-file=/opt/kubernetes/ssl/ca.pem \
+--service-cluster-ip-range=10.0.0.0/24 \
+--use-service-account-credentials=true \
+--controllers=*,bootstrapsigner,tokencleaner \
+--cluster-signing-cert-file=/opt/kubernetes/ssl/ca.pem \
+--cluster-signing-key-file=/opt/kubernetes/ssl/ca-key.pem \
+--root-ca-file=/opt/kubernetes/ssl/ca.pem \
+--service-account-private-key-file=/opt/kubernetes/ssl/ca-key.pem
+
+
+
+
+--logtostderr=false \\
+--v=2 \\
+--log-dir=/opt/kubernetes/logs \\
+--leader-elect=true \\
+--master=https://192.168.11.128:6443 \\
+--bind-address=0.0.0.0
+
+
+curl --cacert ./ssl/ca.pem --cert ./ssl/admin.pem --key ./ssl/admin-key.pem https://192.168.11.128:6443

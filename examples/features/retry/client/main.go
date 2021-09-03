@@ -25,6 +25,8 @@ import (
 	"log"
 	"time"
 
+	"google.golang.org/grpc"
+
 	pb "google.golang.org/grpc/examples/features/proto/echo"
 )
 
