@@ -33,6 +33,10 @@ func NewConcurrentMap() *ConcurrentMap {
 	}
 }
 
+var (
+	 m = sync.Map{}
+)
+
 func (cMap *ConcurrentMap) Delete(key int64) {
 	cMap.mu.Lock()
 	defer cMap.mu.Unlock()
