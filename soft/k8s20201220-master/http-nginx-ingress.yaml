@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: http-nginx-ingress # ingress 名称
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+    - host: mynignx.cn
+      http:
+        paths:
+          - path: "/"
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx-service-nodeport # service 的 metadata.name
+                port:
+                  number: 8080 # 这个对应 nginx.yaml service port
