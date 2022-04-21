@@ -6,7 +6,6 @@ require (
 	github.com/friendsofgo/errors v0.9.2
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/golang/glog v0.0.0-20210429001901-424d2337a529
-	github.com/grpc-ecosystem/grpc-gateway v1.16.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.4.0
 	github.com/tjfoc/gmsm v1.4.0
 	github.com/volatiletech/sqlboiler/v4 v4.5.0
