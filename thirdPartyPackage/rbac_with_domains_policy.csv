@@ -1,0 +1,8 @@
+p, admin, domain1, data1, read,deny,1
+p, admin, domain1, data1, write,,1
+p, admin, domain2, data2, read,, 1
+p, admin, domain2, data2, write,,1
+g, alice, admin, domain1,, alice
+g, bob, admin, domain2,, bob
+g,name,alice,domain1,,,""
+p,alice,domain1,data3,read,,10
