@@ -1,0 +1,12 @@
+prefix 2022/05/30 17:24:48 casbin.NewEnforcer 不通过
+prefix 2022/05/30 17:28:11 casbin.NewEnforcer 通过
+prefix 2022/05/30 17:30:59 casbin.NewEnforcer roles []
+prefix 2022/05/30 17:31:43 casbin.NewEnforcer 通过
+prefix 2022/05/30 17:32:05 casbin.NewEnforcer 通过
+prefix 2022/05/30 17:33:00 casbin.NewEnforcer 通过
+prefix 2022/05/30 17:33:19 casbin.NewEnforcer 通过
+prefix 2022/05/30 17:39:25 casbin.NewEnforcer 通过
+prefix 2022/05/30 17:42:03 casbin.NewEnforcer 通过
+prefix 2022/05/30 17:42:15 casbin.NewEnforcer roles [alice admin]
+prefix 2022/05/30 17:45:17 casbin.NewEnforcer 通过
+prefix 2022/05/30 18:14:39 [[admin domain1 data1 read] [admin domain1 data1 write] [admin domain2 data2 read] [admin domain2 data2 write] [alice domain1 data3 read]]
