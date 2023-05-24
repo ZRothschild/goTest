@@ -62,4 +62,3 @@ domain = "https://api.weixin.qq.com"
         no_local = false #
         log = ""
 
-    docker run -d --hostname zr-rabbit --name rabbit -e RABBITMQ_DEFAULT_USER=guest -e RABBITMQ_DEFAULT_PASS=guest -e RABBITMQ_DEFAULT_VHOST=my_vhost rabbitmq:latest
