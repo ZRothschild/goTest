@@ -459,6 +459,6 @@ type Config struct {
 
 security.protocol=SASL_PLAINTEXT
 sasl.mechanism=PLAIN
-sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="kafka-7ve9dkre#a4cen1ure-test" password="RCjRSEjaXgv";
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="kafka-469410dkre#cen1144re-test" password="R5Ej82gv";
 
 ```

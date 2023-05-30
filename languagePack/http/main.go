@@ -18,26 +18,27 @@ type Data struct {
 func main() {
 	db := database{"shoes": 50, "socks": 5}
 	serveMux := http.NewServeMux()
+	serveMux.HandleFunc("/get/userinfo", db.list)
 	serveMux.HandleFunc("/list", db.list)
 	serveMux.HandleFunc("/price", db.price)
 	serveMux.HandleFunc("/test", db.test)
 	hand := http.StripPrefix("/tmp", http.FileServer(http.Dir("F:\\goWork\\goTest\\http")))
 	serveMux.Handle("/tmp", hand)
-	server := &http.Server{Addr: "localhost:8080", Handler: serveMux}
+	server := &http.Server{Addr: "10.250.211.93:8080", Handler: serveMux}
 	log.Fatal(server.ListenAndServe())
 }
 
-//金额
+// 金额
 type dollars float32
 
 func (d dollars) Strings() string {
 	return fmt.Sprintf("$%.2f", d)
 }
 
-//数据结构
+// 数据结构
 type database map[string]dollars
 
-//list
+// list
 func (db database) list(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(w, "%#v", "数据哈哈")
 	for item, price := range db {
@@ -45,7 +46,7 @@ func (db database) list(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-//price
+// price
 func (db database) price(w http.ResponseWriter, req *http.Request) {
 	item := req.URL.Query().Get("item")
 	price, ok := db[item]
@@ -57,7 +58,7 @@ func (db database) price(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(w, "%f\n", price)
 }
 
-//测试json
+// 测试json
 func (db database) test(w http.ResponseWriter, req *http.Request) {
 	ioReadCloser := req.Body
 	fmt.Printf("ioReadCloser %v\n", ioReadCloser)

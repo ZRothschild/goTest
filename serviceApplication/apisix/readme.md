@@ -121,7 +121,7 @@ docker-compose -p docker-apisix up -d
 ```
 
 
-####   curl -i -X GET "http://127.0.0.1:9080/get/order" -H "Host: www.order.com"
+####   curl -i -X GET "http://127.0.0.1:9080/get/userinfo" -H "Host: www.order.com"
 
 
 ### 示例二
@@ -214,3 +214,9 @@ docker-compose -p docker-apisix up -d
 ```
 
 ####  curl --header "Content-Type: application/json" --request POST --data '{"boolean-payload":"true","required_payload":"xxx"}' "http://127.0.0.1:9080/anything/order" -H "Host: example.com"
+
+
+curl "http://127.0.0.1:9180/apisix/admin/upstreams/12" -H "X-API-KEY: edd1c9f034335f136f87ad84b625c8f1" -X PUT -d '{"uri":"/get/userinfo","name":"重复路由3","methods":["GET","POST","PUT","DELETE","PATCH","HEAD","OPTIONS","CONNECT","TRACE","PURGE"],"upstream":{"nodes":[{"host":"10.250.211.93","port":9082,"weight":1}],"timeout":{"connect":6,"send":6,"read":6},"type":"roundrobin","scheme":"http","pass_host":"pass","keepalive_pool":{"idle_timeout":60,"requests":1000,"size":320}},"labels":{"API_VERSION":"v3"},"status":0}'
+
+
+curl "http://127.0.0.1:9180/apisix/admin/upstreams/121" -H "X-API-KEY: edd1c9f034335f136f87ad84b625c8f1" -X PUT -d '{"type":"roundrobin","nodes":{"httpbin.org:80":1}}'
