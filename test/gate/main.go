@@ -42,18 +42,18 @@ func main() {
 	//}()
 	//defer glog.Flush()
 
-	//if err = http.ListenAndServeTLS(
-	//	":5001",
-	//	"./x509/server_cert.pem",
-	//	"./x509/server_key.pem",
-	//	http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	//		log.Printf("收到请求%v", r)
-	//		s.ServeHTTP(w, r)
-	//	}),
-	//); err != nil {
-	//	fmt.Println(err)
-	//	return
-	//}
+	if err = http.ListenAndServeTLS(
+		":5001",
+		"./x509/server_cert.pem",
+		"./x509/server_key.pem",
+		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			log.Printf("收到请求%v", r)
+			s.ServeHTTP(w, r)
+		}),
+	); err != nil {
+		fmt.Println(err)
+		return
+	}
 	// 如果不加密使用 http2
 	if err := http.ListenAndServe(":5001", mux); err != http.ErrServerClosed {
 		glog.Errorf("Failed to listen and serve: %v", err)
