@@ -16,7 +16,7 @@ require (
 	github.com/openzipkin/zipkin-go v0.2.2
 	github.com/pact-foundation/pact-go v1.5.2
 	github.com/pborman/uuid v1.2.1
-	github.com/prometheus/client_golang v1.10.0
+	github.com/prometheus/client_golang v1.11.1
 	github.com/sony/gobreaker v0.4.1
 	golang.org/x/time v0.0.0-20191024005414-555d28b269f0
 	google.golang.org/grpc v1.38.0
